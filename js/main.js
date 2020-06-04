@@ -5,12 +5,16 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var mapPins = document.querySelector('.map__pins');
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
-var START_Y = 130;
-var START_X = 0;
-var maxCoordinateX = mapPins.clientWidth - (PIN_WIDTH * 1.5);
-var maxCoordinateY = 630 - PIN_HEIGHT;
+var pinSize = {
+  HEIGHT: 70,
+  RADIUS: 50 / 2
+};
+var pinCoordinate = {
+  START_Y: 0,
+  START_X: 130,
+  maxCoordinateX: mapPins.clientWidth - (pinSize.RADIUS * 3),
+  maxCoordinateY: 630 - pinSize.HEIGHT
+};
 
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
@@ -33,8 +37,8 @@ var renderRandomElement = function (elements) {
 var createArrayObjects = function () {
   var objects = [];
   for (var i = 1; i <= 8; i++) {
-    var locationX = getRandomNumber(START_X, maxCoordinateX);
-    var locationY = getRandomNumber(START_Y, maxCoordinateY);
+    var locationX = getRandomNumber(pinCoordinate.START_X, pinCoordinate.maxCoordinateX);
+    var locationY = getRandomNumber(pinCoordinate.START_Y, pinCoordinate.maxCoordinateY);
     var object = {
       'author': {
         'avatar': 'img/avatars/user0' + i + '.png',
@@ -74,8 +78,8 @@ var renderPin = function (pin) {
   var pinImage = pinElement.querySelector('img');
   pinImage.src = pin.author.avatar;
   pinImage.alt = 'заголовок объявления';
-  pinElement.style.left = pin.location.x + (PIN_WIDTH / 2) + 'px';
-  pinElement.style.top = pin.location.y + PIN_HEIGHT + 'px';
+  pinElement.style.left = pin.location.x + pinSize.RADIUS + 'px';
+  pinElement.style.top = pin.location.y + pinSize.HEIGHT + 'px';
   return pinElement;
 };
 
