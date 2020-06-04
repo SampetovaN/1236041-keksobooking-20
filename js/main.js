@@ -69,11 +69,11 @@ var createArrayObjects = function () {
 
 document.querySelector('.map').classList.remove('map--faded');
 var pins = createArrayObjects();
-var similarPinTemplate = document.querySelector('#pin')
-  .content
-  .querySelector('.map__pin');
 
 var renderPin = function (pin) {
+  var similarPinTemplate = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
   var pinElement = similarPinTemplate.cloneNode(true);
   var pinImage = pinElement.querySelector('img');
   pinImage.src = pin.author.avatar;
@@ -83,13 +83,15 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var paintPins = function () {
+
+var paintElements = function (renderFunction) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
-    fragment.appendChild(renderPin(pins[i]));
+    fragment.appendChild(renderFunction(pins[i]));
   }
   mapPins.appendChild(fragment);
 };
 
-paintPins();
+paintElements(renderPin);
+
 
