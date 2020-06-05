@@ -92,7 +92,7 @@ var generateAdverts = function () {
         checkout: getRandomElement(TIMES),
         features: getRandomArray(FEATURES),
         description: 'строка с описанием',
-        photos: getRandomArray(PHOTOS),
+        photos: PHOTOS,
       },
       location: {
         x: locationX,
@@ -134,26 +134,44 @@ var renderPin = function (advert) {
   return pinClone;
 };
 
-var generateFeatures = function (features) {
+
+var generateFeatures = function (items) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < features.length; i++) {
-    var newFeature = document.createElement('li');
-    newFeature.className = 'popup__feature popup__feature--' + features[i];
-    fragment.appendChild(newFeature);
+  for (var i = 0; i < items.length; i++) {
+    var newItem = document.createElement('li');
+    newItem.className = 'popup__feature popup__feature--' + items[i];
+    fragment.appendChild(newItem);
   }
   return fragment;
+};
+
+var generatePhotos = function (items) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < items.length; i++) {
+    var newItem = document.createElement();
+    newItem.innerHTML = 'src=' + items[i] + ' class="popup__photo" width="45" height="40" alt="Фотография жилья"';
+    fragment.appendChild(newItem);
+  }
+  return fragment;
+};
+
+var addElements = function (renderFunction) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adverts.length; i++) {
+    fragment.appendChild(renderFunction(adverts[i]));
+  }
+  mapPins.appendChild(fragment);
 };
 
 var renderCard = function (advert) {
   var cardClone = cardTemplate.cloneNode(true);
   var featuresContainer = cardClone.querySelector('.popup__features');
   var photosContainer = cardClone.querySelector('.popup__photos');
-  var photos = photosContainer.querySelector('img');
+  console.log(photosContainer);
   featuresContainer.innerHTML = '';
   photosContainer.innerHTML = '';
-  photos.src = advert.offer.photos[0]
-  photosContainer.appendChild(photos)
   featuresContainer.appendChild(generateFeatures(advert.offer.features));
+  photosContainer.appendChild(generatePhotos(advert.offer.photos));
   cardClone.querySelector('.popup__title').textContent = advert.offer.title;
   cardClone.querySelector('.popup__text--address').textContent = advert.offer.address;
   cardClone.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
@@ -165,23 +183,14 @@ var renderCard = function (advert) {
   return cardClone;
 };
 
-
-var addPins = function (renderFunction) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adverts.length; i++) {
-    fragment.appendChild(renderFunction(adverts[i]));
-  }
-  mapPins.appendChild(fragment);
-};
-
-var addAdverts = function (renderFunction) {
+var addCards = function (renderFunction) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(renderFunction(adverts[0]));
   map.insertBefore(fragment, filterBlock);
 };
 
 
-addPins(renderPin);
-addAdverts(renderCard);
+addElements(renderPin, mapPins, adverts);
+addCards(renderCard);
 
 
