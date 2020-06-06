@@ -18,6 +18,7 @@ var maxCoordinateX = finishX - PinSize.RADIUS;
 var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
 var GUEST_ENDINGS = ['гостя', 'гостей'];
 
+
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
