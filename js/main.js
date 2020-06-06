@@ -53,10 +53,13 @@ var getHouseTranslation = function (element) {
 var getWordEnding = function (number, forms) {
   var ending = '';
   var numberCheck = number % 100;
-  if (numberCheck >= 11 && numberCheck <= 19) {
+  var startTeen = 11;
+  var endTeen = 19;
+  if (numberCheck >= startTeen && numberCheck <= endTeen) {
     ending = forms[2];
   } else {
-    switch (numberCheck % 10) {
+    var result = numberCheck % 10;
+    switch (result) {
       case (1):
         ending = forms[0];
         break;
