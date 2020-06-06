@@ -13,6 +13,7 @@ var START_Y = 0;
 var START_X = 130;
 var finishX = mapPins.clientWidth;
 var FINISH_Y = 630;
+var FIRST_ELEMENT = 0;
 var maxCoordinateX = finishX - PinSize.RADIUS;
 var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
 var GUEST_ENDINGS = ['гостя', 'гостей'];
@@ -24,15 +25,13 @@ var getRandomNumber = function (min, max) {
 };
 
 var getRandomArray = function (elements) {
-  var maxLength = elements.length - 1;
-  var minLength = 1;
-  return elements.slice(elements.length - getRandomNumber(minLength, maxLength));
+  var maxElement = elements.length;
+  return elements.slice(getRandomNumber(FIRST_ELEMENT, maxElement));
 };
 
 var getRandomElement = function (elements) {
-  var lastElement = elements.length - 1;
-  var firstElement = 0;
-  return elements[getRandomNumber(firstElement, lastElement)];
+  var maxElement = elements.length - 1;
+  return elements[getRandomNumber(FIRST_ELEMENT, maxElement)];
 };
 
 var getHouseTranslation = function (element) {
@@ -92,7 +91,7 @@ var generateAdverts = function () {
         checkout: getRandomElement(TIMES),
         features: getRandomArray(FEATURES),
         description: 'строка с описанием',
-        photos: PHOTOS,
+        photos: getRandomArray(PHOTOS),
       },
       location: {
         x: locationX,
@@ -110,14 +109,12 @@ var getMaxCoordinate = function (coordinate, maxCoordinate) {
 };
 
 var map = document.querySelector('.map');
-var filterBlock = map.querySelector('.map__filters-container');
 map.classList.remove('map--faded');
+var filterContainer = map.querySelector('.map__filters-container');
 var adverts = generateAdverts();
-
 var pinTemplate = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
-
 var cardTemplate = document.querySelector('#card')
   .content
   .querySelector('.map__card');
@@ -145,33 +142,36 @@ var generateFeatures = function (items) {
   return fragment;
 };
 
-var generatePhotos = function (items) {
+var renderPhoto = function (item, photo) {
+  var clonePhoto = photo.cloneNode(true);
+  clonePhoto.src = item;
+  return clonePhoto;
+};
+
+var generatePhotos = function (items, photo) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < items.length; i++) {
-    var newItem = document.createElement();
-    newItem.innerHTML = 'src=' + items[i] + ' class="popup__photo" width="45" height="40" alt="Фотография жилья"';
-    fragment.appendChild(newItem);
+    fragment.appendChild(renderPhoto(items[i], photo));
   }
   return fragment;
 };
 
-var addElements = function (renderFunction) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < adverts.length; i++) {
-    fragment.appendChild(renderFunction(adverts[i]));
-  }
-  mapPins.appendChild(fragment);
+var hideBlock = function (block) {
+  var childrenAmount = block.children.length;
+  block.style.display = childrenAmount === 0 ? 'none' : '';
 };
 
 var renderCard = function (advert) {
   var cardClone = cardTemplate.cloneNode(true);
   var featuresContainer = cardClone.querySelector('.popup__features');
   var photosContainer = cardClone.querySelector('.popup__photos');
-  console.log(photosContainer);
+  var photo = cardClone.querySelector('.popup__photo');
   featuresContainer.innerHTML = '';
   photosContainer.innerHTML = '';
   featuresContainer.appendChild(generateFeatures(advert.offer.features));
-  photosContainer.appendChild(generatePhotos(advert.offer.photos));
+  photosContainer.appendChild(generatePhotos(advert.offer.photos, photo));
+  hideBlock(featuresContainer);
+  hideBlock(photosContainer);
   cardClone.querySelector('.popup__title').textContent = advert.offer.title;
   cardClone.querySelector('.popup__text--address').textContent = advert.offer.address;
   cardClone.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
@@ -183,14 +183,21 @@ var renderCard = function (advert) {
   return cardClone;
 };
 
+var addPins = function (renderFunction) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < adverts.length; i++) {
+    fragment.appendChild(renderFunction(adverts[i]));
+  }
+  mapPins.appendChild(fragment);
+};
+
 var addCards = function (renderFunction) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(renderFunction(adverts[0]));
-  map.insertBefore(fragment, filterBlock);
+  map.insertBefore(fragment, filterContainer);
 };
 
-
-addElements(renderPin, mapPins, adverts);
+addPins(renderPin);
 addCards(renderCard);
 
 
