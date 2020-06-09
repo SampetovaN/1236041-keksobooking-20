@@ -4,7 +4,8 @@ var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var mapPins = document.querySelector('.map__pins');
+var map = document.querySelector('.map');
+var mapPins = map.querySelector('.map__pins');
 var PinSize = {
   HEIGHT: 70,
   RADIUS: 50 / 2,
@@ -17,7 +18,10 @@ var FIRST_ELEMENT = 0;
 var maxCoordinateX = finishX - PinSize.RADIUS;
 var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
 var GUEST_ENDINGS = ['гостя', 'гостей'];
-
+var MainPinSize = {
+  HEIGHT: 83,
+  RADIUS: 65 / 2,
+};
 
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
@@ -112,9 +116,6 @@ var getMaxCoordinate = function (coordinate, maxCoordinate) {
   return coordinate > maxCoordinate ? maxCoordinate : coordinate;
 };
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var filterContainer = map.querySelector('.map__filters-container');
 var adverts = generateAdverts();
 var pinTemplate = document.querySelector('#pin')
   .content
@@ -201,7 +202,64 @@ var addCards = function (renderFunction) {
   map.insertBefore(fragment, filterContainer);
 };
 
-addPins(renderPin);
-addCards(renderCard);
+var notice = document.querySelector('.notice');
+var advertForm = notice.querySelector('.ad-form');
+var filterContainer = map.querySelector('.map__filters-container');
+var filterForm = filterContainer.querySelector('.map__filters');
+var advertFormBlocks = advertForm.children;
+var filterFormBlocks = filterForm.children;
+var mainPin = mapPins.querySelector('.map__pin--main');
+var advertAddress = advertForm.querySelector('#address');
+var isMapOn = false;
+
+var disableBlock = function (block) {
+  block.setAttribute('disabled', 'disabled');
+};
+
+var enableBlock = function (block) {
+  block.removeAttribute('disabled');
+};
+
+var turnBlocks = function (blocks, turnFunction) {
+  for (var i = 0; i < blocks.length; i++) {
+    turnFunction(blocks[i]);
+  }
+};
+
+var generatePinAddress = function (isTurnOn) {
+  var top = parseInt(mainPin.style.top, 10);
+  var addressTop = top + (isTurnOn ? MainPinSize.RADIUS : MainPinSize.HEIGHT);
+  var addressLeft = parseInt(mainPin.style.left, 10) + MainPinSize.RADIUS;
+  return Math.round(addressTop) + ' ' + Math.round(addressLeft);
+};
+
+turnBlocks(advertFormBlocks, disableBlock);
+turnBlocks(filterFormBlocks, disableBlock);
+advertAddress.value = generatePinAddress(isMapOn);
+
+
+var turnOnMap = function () {
+  if (!isMapOn) {
+    isMapOn = true;
+    map.classList.remove('map--faded');
+    addCards(renderCard);
+    addPins(renderPin);
+    advertAddress.value = generatePinAddress(isMapOn);
+    turnBlocks(advertFormBlocks, enableBlock);
+    turnBlocks(filterFormBlocks, enableBlock);
+  }
+};
+
+mainPin.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    turnOnMap();
+  }
+});
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    turnOnMap();
+  }
+});
 
 
