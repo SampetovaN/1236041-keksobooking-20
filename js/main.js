@@ -4,20 +4,26 @@ var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var mapPins = document.querySelector('.map__pins');
 var PinSize = {
   HEIGHT: 70,
   RADIUS: 50 / 2,
 };
+var map = document.querySelector('.map');
+var mapPins = map.querySelector('.map__pins');
 var START_Y = 0;
 var START_X = 130;
 var finishX = mapPins.clientWidth;
 var FINISH_Y = 630;
 var FIRST_ELEMENT = 0;
 var maxCoordinateX = finishX - PinSize.RADIUS;
-var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
-var GUEST_ENDINGS = ['гостя', 'гостей'];
-
+/* var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
+var GUEST_ENDINGS = ['гостя', 'гостей'];*/
+var MainPinSize = {
+  HEIGHT: 83,
+  RADIUS: 65 / 2,
+};
+var LEFT_MOUSE_BUTTON = 0;
+var ENTER_BUTTON = 'Enter';
 
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
@@ -35,7 +41,7 @@ var getRandomElement = function (elements) {
   return elements[getRandomNumber(FIRST_ELEMENT, maxElement)];
 };
 
-var getHouseTranslation = function (element) {
+/* var getHouseTranslation = function (element) {
   switch (element) {
     case 'flat':
       return 'Квартира';
@@ -73,7 +79,7 @@ var getWordEnding = function (number, forms) {
     }
   }
   return number + ' ' + ending;
-};
+};*/
 
 var generateAdverts = function () {
   var adverts = [];
@@ -112,16 +118,13 @@ var getMaxCoordinate = function (coordinate, maxCoordinate) {
   return coordinate > maxCoordinate ? maxCoordinate : coordinate;
 };
 
-var map = document.querySelector('.map');
-map.classList.remove('map--faded');
-var filterContainer = map.querySelector('.map__filters-container');
 var adverts = generateAdverts();
 var pinTemplate = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
-var cardTemplate = document.querySelector('#card')
+/* var cardTemplate = document.querySelector('#card')
   .content
-  .querySelector('.map__card');
+  .querySelector('.map__card');*/
 
 var renderPin = function (advert) {
   var pinClone = pinTemplate.cloneNode(true);
@@ -136,7 +139,7 @@ var renderPin = function (advert) {
 };
 
 
-var generateFeatures = function (items) {
+/* var generateFeatures = function (items) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < items.length; i++) {
     var newItem = document.createElement('li');
@@ -185,7 +188,7 @@ var renderCard = function (advert) {
   cardClone.querySelector('.popup__description').textContent = advert.offer.description;
   cardClone.querySelector('.popup__avatar').src = advert.author.avatar;
   return cardClone;
-};
+};*/
 
 var addPins = function (renderFunction) {
   var fragment = document.createDocumentFragment();
@@ -195,13 +198,102 @@ var addPins = function (renderFunction) {
   mapPins.appendChild(fragment);
 };
 
-var addCards = function (renderFunction) {
+/* var addCards = function (renderFunction) {
   var fragment = document.createDocumentFragment();
   fragment.appendChild(renderFunction(adverts[0]));
   map.insertBefore(fragment, filterContainer);
 };
 
-addPins(renderPin);
-addCards(renderCard);
+addCards(renderCard);*/
 
+var advertForm = document.querySelector('.ad-form');
+var filterContainer = map.querySelector('.map__filters-container');
+var filterForm = filterContainer.querySelector('.map__filters');
+var advertFormBlocks = advertForm.children;
+var filterFormBlocks = filterForm.children;
+var mainPin = mapPins.querySelector('.map__pin--main');
+var advertAddress = advertForm.querySelector('#address');
+var isMapOn = false;
+
+var disableBlock = function (block) {
+  block.disabled = true;
+};
+
+var enableBlock = function (block) {
+  block.disabled = false;
+};
+
+var turnBlocks = function (blocks, turnFunction) {
+  for (var i = 0; i < blocks.length; i++) {
+    turnFunction(blocks[i]);
+  }
+};
+
+var formatMainPinAddress = function (isTurnOn) {
+  var top = parseInt(mainPin.style.top, 10);
+  var addressTop = top + (isTurnOn ? MainPinSize.HEIGHT : MainPinSize.RADIUS);
+  var addressLeft = parseInt(mainPin.style.left, 10) + MainPinSize.RADIUS;
+  return Math.round(addressLeft) + ', ' + Math.round(addressTop);
+};
+
+turnBlocks(advertFormBlocks, disableBlock);
+turnBlocks(filterFormBlocks, disableBlock);
+advertAddress.value = formatMainPinAddress(isMapOn);
+
+
+var turnOnMap = function () {
+  if (!isMapOn) {
+    isMapOn = true;
+    map.classList.remove('map--faded');
+    advertForm.classList.remove('ad-form--disabled');
+    addPins(renderPin);
+    advertAddress.value = formatMainPinAddress(isMapOn);
+    turnBlocks(advertFormBlocks, enableBlock);
+    turnBlocks(filterFormBlocks, enableBlock);
+    checkCapacity();
+  }
+};
+
+mainPin.addEventListener('mousedown', function (evt) {
+  if (evt.button === LEFT_MOUSE_BUTTON) {
+    turnOnMap();
+  }
+});
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.key === ENTER_BUTTON) {
+    turnOnMap();
+  }
+});
+
+var capacity = advertForm.querySelector('#capacity');
+var roomNumber = advertForm.querySelector('#room_number');
+var capacityValues = ['1', '2', '3'];
+var constraintType = {
+  1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
+  2: [capacityValues.slice(0, 2), 'Для двух комнат гостей не может быть больше двух'],
+  3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
+  100: ['0', 'Помещение сдается не для гостей']
+};
+
+var checkCapacity = function () {
+  var isValid = constraintType[roomNumber.value][0].indexOf(capacity.value) !== -1;
+
+  if (isValid) {
+    capacity.setCustomValidity('');
+    capacity.style.borderColor = '';
+  } else {
+    capacity.setCustomValidity(constraintType[roomNumber.value][1]);
+    capacity.style.borderColor = 'red';
+  }
+};
+
+capacity.addEventListener('change', function () {
+  checkCapacity();
+});
+
+
+roomNumber.addEventListener('change', function () {
+  checkCapacity();
+});
 
