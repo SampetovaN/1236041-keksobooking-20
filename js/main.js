@@ -4,12 +4,12 @@ var TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var HOUSE_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var map = document.querySelector('.map');
-var mapPins = map.querySelector('.map__pins');
 var PinSize = {
   HEIGHT: 70,
   RADIUS: 50 / 2,
 };
+var map = document.querySelector('.map');
+var mapPins = map.querySelector('.map__pins');
 var START_Y = 0;
 var START_X = 130;
 var finishX = mapPins.clientWidth;
@@ -22,6 +22,8 @@ var MainPinSize = {
   HEIGHT: 83,
   RADIUS: 65 / 2,
 };
+var LEFT_MOUSE_BUTTON = 0;
+var ENTER_BUTTON = 'Enter';
 
 var getRandomNumber = function (min, max) {
   min = Math.ceil(min);
@@ -214,11 +216,11 @@ var advertAddress = advertForm.querySelector('#address');
 var isMapOn = false;
 
 var disableBlock = function (block) {
-  block.setAttribute('disabled', 'disabled');
+  block.disabled = true;
 };
 
 var enableBlock = function (block) {
-  block.removeAttribute('disabled');
+  block.disabled = false;
 };
 
 var turnBlocks = function (blocks, turnFunction) {
@@ -227,16 +229,16 @@ var turnBlocks = function (blocks, turnFunction) {
   }
 };
 
-var generatePinAddress = function (isTurnOn) {
+var formatMainPinAddress = function (isTurnOn) {
   var top = parseInt(mainPin.style.top, 10);
   var addressTop = top + (isTurnOn ? MainPinSize.HEIGHT : MainPinSize.RADIUS);
   var addressLeft = parseInt(mainPin.style.left, 10) + MainPinSize.RADIUS;
-  return Math.round(addressTop) + ' ' + Math.round(addressLeft);
+  return Math.round(addressLeft) + ', ' + Math.round(addressTop);
 };
 
 turnBlocks(advertFormBlocks, disableBlock);
 turnBlocks(filterFormBlocks, disableBlock);
-advertAddress.value = generatePinAddress(isMapOn);
+advertAddress.value = formatMainPinAddress(isMapOn);
 
 
 var turnOnMap = function () {
@@ -245,7 +247,7 @@ var turnOnMap = function () {
     map.classList.remove('map--faded');
     advertForm.classList.remove('ad-form--disabled');
     addPins(renderPin);
-    advertAddress.value = generatePinAddress(isMapOn);
+    advertAddress.value = formatMainPinAddress(isMapOn);
     turnBlocks(advertFormBlocks, enableBlock);
     turnBlocks(filterFormBlocks, enableBlock);
     checkCapacity();
@@ -253,39 +255,38 @@ var turnOnMap = function () {
 };
 
 mainPin.addEventListener('mousedown', function (evt) {
-  if (evt.button === 0) {
+  if (evt.button === LEFT_MOUSE_BUTTON) {
     turnOnMap();
   }
 });
 
 mainPin.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Enter') {
+  if (evt.key === ENTER_BUTTON) {
     turnOnMap();
   }
 });
 
 var capacity = advertForm.querySelector('#capacity');
 var roomNumber = advertForm.querySelector('#room_number');
+var capacityValues = ['1', '2', '3'];
+var constraintType = {
+  1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
+  2: [capacityValues.slice(0, 2), 'Для двух комнат гостей не может быть больше двух'],
+  3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
+  100: ['0', 'Помещение сдается не для гостей']
+};
 
-function checkCapacity() {
-  var capacityValues = ['1', '2', '3'];
-  var constraintType = {
-    1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
-    2: [capacityValues.slice(0, 2), 'Для двух комнат гостей не может быть больше двух'],
-    3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
-    100: ['0', 'Помещение сдается не для гостей']
-  };
+var checkCapacity = function () {
+  var isValid = constraintType[roomNumber.value][0].indexOf(capacity.value) !== -1;
 
-  var constraint = constraintType[roomNumber.value][0].indexOf(capacity.value) !== -1;
-
-  if (constraint) {
+  if (isValid) {
     capacity.setCustomValidity('');
     capacity.style.borderColor = '';
   } else {
     capacity.setCustomValidity(constraintType[roomNumber.value][1]);
     capacity.style.borderColor = 'red';
   }
-}
+};
 
 capacity.addEventListener('change', function () {
   checkCapacity();
@@ -295,5 +296,4 @@ capacity.addEventListener('change', function () {
 roomNumber.addEventListener('change', function () {
   checkCapacity();
 });
-
 
