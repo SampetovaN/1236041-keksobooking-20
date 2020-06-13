@@ -1,11 +1,11 @@
 'use strict';
 (function () {
-  var capacity = window.utils.advertForm.querySelector('#capacity');
-  var roomNumber = window.utils.advertForm.querySelector('#room_number');
-  var mainPinSize = {
+  var MainPinSize = {
     HEIGHT: 83,
     RADIUS: 65 / 2,
   };
+  var capacity = window.utils.advertForm.querySelector('#capacity');
+  var roomNumber = window.utils.advertForm.querySelector('#room_number');
   var capacityValues = ['1', '2', '3'];
   var constraintType = {
     1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
@@ -13,10 +13,11 @@
     3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
     100: ['0', 'Помещение сдается не для гостей'],
   };
+
   var formatMainPinAddress = function (isTurnOn) {
     var top = parseInt(window.utils.mainPin.style.top, 10);
-    var addressTop = top + (isTurnOn ? mainPinSize.HEIGHT : mainPinSize.RADIUS);
-    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + mainPinSize.RADIUS;
+    var addressTop = top + (isTurnOn ? MainPinSize.HEIGHT : MainPinSize.RADIUS);
+    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + MainPinSize.RADIUS;
     return Math.round(addressLeft) + ', ' + Math.round(addressTop);
   };
   var checkCapacity = function () {
@@ -50,7 +51,7 @@
 
   window.form = {
     formatMainPinAddress: formatMainPinAddress,
-    turnOnForm: turnOnForm
+    turnOn: turnOnForm,
   };
 })();
 

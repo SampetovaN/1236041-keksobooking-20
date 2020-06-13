@@ -3,8 +3,8 @@
   var turnOnPage = function () {
     if (!window.utils.isMapOn) {
       window.utils.isMapOn = true;
-      window.map.turnOnMap();
-      window.form.turnOnForm();
+      window.map.turnOn();
+      window.form.turnOn();
     }
   };
   window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.disableBlock);

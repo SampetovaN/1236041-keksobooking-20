@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var FINISH_Y = 630;
+  var LEFT_MOUSE_BUTTON = 0;
+  var ENTER_BUTTON = 'Enter';
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var filterForm = map.querySelector('.map__filters');
@@ -8,9 +11,6 @@
   var advertForm = document.querySelector('.ad-form');
   var advertAddress = advertForm.querySelector('#address');
   var isMapOn = false;
-  var FINISH_Y = 630;
-  var LEFT_MOUSE_BUTTON = 0;
-  var ENTER_BUTTON = 'Enter';
   window.utils = {
     finishX: mapPins.clientWidth,
     FINISH_Y: FINISH_Y,
@@ -39,7 +39,7 @@
       }
     },
     isEnterEvent: function (evt, action) {
-      if (evt.keyCode === ENTER_BUTTON) {
+      if (evt.key === ENTER_BUTTON) {
         action();
       }
     }
