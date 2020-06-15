@@ -24,6 +24,7 @@
     filterFormBlocks: filterForm.children,
     isMapOn: isMapOn,
     ESCAPE_BUTTON: ESCAPE_BUTTON,
+    ENTER_BUTTON: ENTER_BUTTON,
     disableBlock: function (block) {
       block.disabled = true;
     },

@@ -20,13 +20,7 @@
     if (cardPopup) {
       cardPopup.parentNode.removeChild(cardPopup);
     }
-  };
 
-  var onPopupEscPress = function (evt) {
-    if (evt.key === window.utils.ESCAPE_BUTTON) {
-      evt.preventDefault();
-      removeCard();
-    }
   };
 
   var turnOnMap = function () {
@@ -57,7 +51,6 @@
     addCard: addCard,
     filterPins: filterPins,
     findIndexPin: findIndexPin,
-    removeCard: removeCard,
-    onPopupEscPress: onPopupEscPress
+    removeCard: removeCard
   };
 })();
