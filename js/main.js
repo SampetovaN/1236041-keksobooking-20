@@ -2,13 +2,13 @@
 (function () {
   var pinClicked;
   var pinId;
-
   var turnOnPage = function () {
     if (!window.utils.isMapOn) {
       window.utils.isMapOn = true;
       window.map.turnOn();
       window.form.turnOn();
-      window.map.setPinId(window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)'));
+      var pins = window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+      window.map.setPinId(pins);
     }
   };
 
@@ -20,8 +20,8 @@
   };
 
   var openAdvert = function (evt) {
-    var closest = evt.target.closest('.map__pin');
-    if (closest && !closest.classList.contains('map__pin--main')) {
+    var closest = evt.target.closest('.map__pin:not(.map__pin--main)');
+    if (closest) {
       var tempPinId = closest.dataset.id;
       if (pinClicked) {
         pinClicked.classList.remove('map__pin--active');
@@ -67,7 +67,7 @@
   });
   window.utils.map.addEventListener('click', function (evt) {
     if (evt.target.className === 'popup__close') {
-      closeAdvert(evt);
+      closeAdvert();
     }
   });
 })();
