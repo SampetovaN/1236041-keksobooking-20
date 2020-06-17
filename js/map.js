@@ -34,7 +34,6 @@
       });
   };
 
-
   window.map = {
     turnOn: turnOnMap,
     addCard: addCard,
