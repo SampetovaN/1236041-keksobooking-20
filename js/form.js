@@ -4,14 +4,24 @@
     HEIGHT: 83,
     RADIUS: 65 / 2,
   };
+  var MIN_TITLE_LENGTH = 30;
+  var MAX_TITLE_LENGTH = 100;
   var capacity = window.utils.advertForm.querySelector('#capacity');
   var roomNumber = window.utils.advertForm.querySelector('#room_number');
+  var advertTitle = window.utils.advertForm.querySelector('#title');
+  var advertType = window.utils.advertForm.querySelector('#type');
+  var advertPrice = window.utils.advertForm.querySelector('#price');
+  var advertCheckIn = window.utils.advertForm.querySelector('#timein');
+  var advertCheckOut = window.utils.advertForm.querySelector('#timeout');
   var capacityValues = ['1', '2', '3'];
   var constraintType = {
     1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
     2: [capacityValues.slice(0, 2), 'Для двух комнат гостей не может быть больше двух'],
     3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
     100: ['0', 'Помещение сдается не для гостей'],
+  };
+  var colorizeBorder = function (element, isValid) {
+    element.style.borderColor = isValid ? '' : 'red';
   };
 
   var formatMainPinAddress = function (isTurnOn) {
@@ -25,11 +35,64 @@
 
     if (isValid) {
       capacity.setCustomValidity('');
-      capacity.style.borderColor = '';
     } else {
       capacity.setCustomValidity(constraintType[roomNumber.value][1]);
-      capacity.style.borderColor = 'red';
     }
+    colorizeBorder(capacity, isValid);
+  };
+  var checkEmptyInput = function (input) {
+    var valueMissing = input.validity.valueMissing;
+    if (input.validity.valueMissing) {
+      input.setCustomValidity('Обязательное поле');
+    } else {
+      input.setCustomValidity('');
+    }
+    colorizeBorder(input, valueMissing);
+  };
+  var checkLengthAdvertName = function () {
+    var valueLength = advertTitle.value.length;
+    var isValid = false;
+    if (valueLength < MIN_TITLE_LENGTH) {
+      advertTitle.setCustomValidity('Ещё ' + (MIN_TITLE_LENGTH - valueLength) + ' симв.');
+    } else if (valueLength > MAX_TITLE_LENGTH) {
+      advertTitle.setCustomValidity('Удалите лишние ' + (valueLength - MAX_TITLE_LENGTH) + ' симв.');
+    } else {
+      advertTitle.setCustomValidity('');
+      isValid = true;
+    }
+    colorizeBorder(advertTitle, isValid);
+  };
+  var changeMinPrice = function () {
+    switch (advertType.value) {
+      case 'flat':
+        advertPrice.placeholder = '1000';
+        advertPrice.min = '1000';
+        break;
+      case 'bungalo':
+        advertPrice.placeholder = '0';
+        advertPrice.min = '0';
+        break;
+      case 'house':
+        advertPrice.placeholder = '5000';
+        advertPrice.min = '5000';
+        break;
+      case 'palace':
+        advertPrice.placeholder = '10000';
+        advertPrice.min = '10000';
+        break;
+      default:
+        advertPrice.placeholder = '1000';
+        advertPrice.min = '1000';
+    }
+  };
+
+  var checkAdvertPrice = function () {
+    var isValid = !(advertPrice.validity.rangeUnderflow || advertPrice.validity.rangeOverflow);
+    colorizeBorder(advertPrice, isValid);
+  };
+
+  var sunchronizeTime = function (timeChanged, timeToSunchronize) {
+    timeToSunchronize.value = timeChanged.value;
   };
 
   var turnOnForm = function () {
@@ -38,15 +101,36 @@
     window.utils.advertAddress.value = formatMainPinAddress(window.utils.isMapOn);
     window.utils.advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
+    checkAdvertPrice();
   };
 
   capacity.addEventListener('change', function () {
     checkCapacity();
   });
-
-
   roomNumber.addEventListener('change', function () {
     checkCapacity();
+  });
+  advertType.addEventListener('change', function () {
+    changeMinPrice();
+    checkAdvertPrice();
+  });
+  advertTitle.addEventListener('input', function () {
+    checkLengthAdvertName();
+  });
+  advertPrice.addEventListener('input', function () {
+    checkAdvertPrice();
+  });
+  advertTitle.addEventListener('invalid', function () {
+    checkEmptyInput(advertTitle);
+  });
+  advertPrice.addEventListener('invalid', function () {
+    checkEmptyInput(advertPrice);
+  });
+  advertCheckIn.addEventListener('change', function () {
+    sunchronizeTime(advertCheckIn, advertCheckOut);
+  });
+  advertCheckOut.addEventListener('change', function () {
+    sunchronizeTime(advertCheckOut, advertCheckIn);
   });
 
   window.form = {

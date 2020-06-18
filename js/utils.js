@@ -4,6 +4,7 @@
   var FINISH_Y = 630;
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_BUTTON = 'Enter';
+  var ESCAPE_BUTTON = 'Escape';
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var filterForm = map.querySelector('.map__filters');
@@ -22,6 +23,8 @@
     advertFormBlocks: advertForm.children,
     filterFormBlocks: filterForm.children,
     isMapOn: isMapOn,
+    ESCAPE_BUTTON: ESCAPE_BUTTON,
+    ENTER_BUTTON: ENTER_BUTTON,
     disableBlock: function (block) {
       block.disabled = true;
     },
