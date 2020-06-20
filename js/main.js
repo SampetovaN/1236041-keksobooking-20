@@ -2,13 +2,12 @@
 (function () {
   var pinClicked;
   var pinId;
+  var pins;
   var turnOnPage = function () {
     if (!window.utils.isMapOn) {
       window.utils.isMapOn = true;
       window.map.turnOn();
       window.form.turnOn();
-      var pins = window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-      window.map.setPinId(pins);
     }
   };
 
@@ -20,6 +19,10 @@
   };
 
   var openAdvert = function (evt) {
+    if (!pins) {
+      pins = window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+      window.map.setPinId(pins);
+    }
     var closest = evt.target.closest('.map__pin:not(.map__pin--main)');
     if (closest) {
       var tempPinId = closest.dataset.id;

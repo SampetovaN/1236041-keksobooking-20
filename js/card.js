@@ -95,6 +95,7 @@
     cardClone.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
     cardClone.querySelector('.popup__description').textContent = advert.offer.description;
     cardClone.querySelector('.popup__avatar').src = advert.author.avatar;
+    cardClone.style.display = 'none';
     return cardClone;
   };
 
