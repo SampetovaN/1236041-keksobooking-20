@@ -3,19 +3,11 @@
 (function () {
   var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
   var GUEST_ENDINGS = ['гостя', 'гостей'];
-  var getHouseTranslation = function (element) {
-    switch (element) {
-      case 'flat':
-        return 'Квартира';
-      case 'bungalo':
-        return 'Бунгало';
-      case 'house':
-        return 'Дом';
-      case 'palace':
-        return 'Дворец';
-      default:
-        return 'Квартира';
-    }
+  var typeToHouseName = {
+    flat: 'Квартира',
+    bungalo: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец'
   };
 
   var getWordEnding = function (number, forms) {
@@ -90,7 +82,7 @@
     cardClone.querySelector('.popup__title').textContent = advert.offer.title;
     cardClone.querySelector('.popup__text--address').textContent = advert.offer.address;
     cardClone.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
-    cardClone.querySelector('.popup__type').textContent = getHouseTranslation(advert.offer.type);
+    cardClone.querySelector('.popup__type').textContent = typeToHouseName[advert.offer.type];
     cardClone.querySelector('.popup__text--capacity').textContent = getWordEnding(advert.offer.rooms, ROOM_ENDINGS) + ' для ' + getWordEnding(advert.offer.guests, GUEST_ENDINGS);
     cardClone.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
     cardClone.querySelector('.popup__description').textContent = advert.offer.description;

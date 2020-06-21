@@ -5,7 +5,7 @@
     HEIGHT: 70,
     RADIUS: 50 / 2,
   };
-  var maxCoordinateX = window.utils.finishX - PinSize.RADIUS;
+  var maxCoordinateX = window.utils.MapRect.RIGHT - PinSize.RADIUS;
   var pinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
@@ -16,7 +16,7 @@
     var pinClone = pinTemplate.cloneNode(true);
     var image = pinClone.querySelector('img');
     var finalX = getMaxCoordinate(advert.location.x + PinSize.RADIUS, maxCoordinateX);
-    var finalY = getMaxCoordinate(advert.location.y + PinSize.HEIGHT, window.utils.FINISH_Y);
+    var finalY = getMaxCoordinate(advert.location.y + PinSize.HEIGHT, window.utils.MapRect.BOTTOM);
     image.src = advert.author.avatar;
     image.alt = advert.offer.title;
     pinClone.style.left = finalX + 'px';

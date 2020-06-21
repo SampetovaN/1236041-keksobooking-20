@@ -1,20 +1,23 @@
 'use strict';
 
 (function () {
-  var FINISH_Y = 630;
+  var MapRect = {
+    LEFT: 0,
+    RIGHT: 1200,
+    TOP: 130,
+    BOTTOM: 630,
+  };
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_BUTTON = 'Enter';
-  var ESCAPE_BUTTON = 'Escape';
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var filterForm = map.querySelector('.map__filters');
   var mainPin = mapPins.querySelector('.map__pin--main');
   var advertForm = document.querySelector('.ad-form');
   var advertAddress = advertForm.querySelector('#address');
-  var isMapOn = false;
+
   window.utils = {
-    finishX: mapPins.clientWidth,
-    FINISH_Y: FINISH_Y,
+    MapRect: MapRect,
     map: map,
     mapPins: mapPins,
     mainPin: mainPin,
@@ -22,9 +25,6 @@
     advertForm: advertForm,
     advertFormBlocks: advertForm.children,
     filterFormBlocks: filterForm.children,
-    isMapOn: isMapOn,
-    ESCAPE_BUTTON: ESCAPE_BUTTON,
-    ENTER_BUTTON: ENTER_BUTTON,
     disableBlock: function (block) {
       block.disabled = true;
     },
@@ -36,14 +36,14 @@
         turnFunction(blocks[i]);
       }
     },
-    isClickEvent: function (evt, action) {
+    isLeftMouseButton: function (evt, action) {
       if (evt.button === LEFT_MOUSE_BUTTON) {
         action();
       }
     },
     isEnterEvent: function (evt, action) {
       if (evt.key === ENTER_BUTTON) {
-        action();
+        action(evt);
       }
     }
   };

@@ -14,11 +14,23 @@
   var advertCheckIn = window.utils.advertForm.querySelector('#timein');
   var advertCheckOut = window.utils.advertForm.querySelector('#timeout');
   var capacityValues = ['1', '2', '3'];
-  var constraintType = {
-    1: [capacityValues.slice(0, 1), 'Для одной комнаты гостей не может быть больше одного'],
-    2: [capacityValues.slice(0, 2), 'Для двух комнат гостей не может быть больше двух'],
-    3: [capacityValues, 'Для трех комнат гостей не может быть больше трех'],
-    100: ['0', 'Помещение сдается не для гостей'],
+  var guestToCapacity = {
+    1: capacityValues.slice(0, 1),
+    2: capacityValues.slice(0, 2),
+    3: capacityValues,
+    100: '0'
+  };
+  var guestToConstraint = {
+    1: 'Для одной комнаты гостей не может быть больше одного',
+    2: 'Для двух комнат гостей не может быть больше двух',
+    3: 'Для трех комнат гостей не может быть больше трех',
+    100: 'Помещение сдается не для гостей'
+  };
+  var typeToMinCost = {
+    flat: '1000',
+    bungalo: '0',
+    house: '5000',
+    palace: '10000'
   };
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
@@ -31,12 +43,12 @@
     return Math.round(addressLeft) + ', ' + Math.round(addressTop);
   };
   var checkCapacity = function () {
-    var isValid = constraintType[roomNumber.value][0].indexOf(capacity.value) !== -1;
+    var isValid = guestToCapacity[roomNumber.value].indexOf(capacity.value) !== -1;
 
     if (isValid) {
       capacity.setCustomValidity('');
     } else {
-      capacity.setCustomValidity(constraintType[roomNumber.value][1]);
+      capacity.setCustomValidity(guestToConstraint[roomNumber.value]);
     }
     colorizeBorder(capacity, isValid);
   };
@@ -62,28 +74,9 @@
     }
     colorizeBorder(advertTitle, isValid);
   };
-  var changeMinPrice = function () {
-    switch (advertType.value) {
-      case 'flat':
-        advertPrice.placeholder = '1000';
-        advertPrice.min = '1000';
-        break;
-      case 'bungalo':
-        advertPrice.placeholder = '0';
-        advertPrice.min = '0';
-        break;
-      case 'house':
-        advertPrice.placeholder = '5000';
-        advertPrice.min = '5000';
-        break;
-      case 'palace':
-        advertPrice.placeholder = '10000';
-        advertPrice.min = '10000';
-        break;
-      default:
-        advertPrice.placeholder = '1000';
-        advertPrice.min = '1000';
-    }
+  var changeMinPrice = function (minCost) {
+    advertPrice.placeholder = minCost;
+    advertPrice.min = minCost;
   };
 
   var checkAdvertPrice = function () {
@@ -98,12 +91,11 @@
   var turnOnForm = function () {
     window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.enableBlock);
     window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.enableBlock);
-    window.utils.advertAddress.value = formatMainPinAddress(window.utils.isMapOn);
+    window.utils.advertAddress.value = formatMainPinAddress(window.common.isMapOn);
     window.utils.advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
   };
-
   capacity.addEventListener('change', function () {
     checkCapacity();
   });
@@ -111,7 +103,11 @@
     checkCapacity();
   });
   advertType.addEventListener('change', function () {
-    changeMinPrice();
+    changeMinPrice(typeToMinCost[advertType.value]);
+    checkAdvertPrice();
+  });
+  advertType.addEventListener('keydown', function () {
+    changeMinPrice(typeToMinCost[advertType.value]);
     checkAdvertPrice();
   });
   advertTitle.addEventListener('input', function () {
