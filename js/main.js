@@ -3,11 +3,38 @@
   var pinClicked;
   var pinId;
   var pins;
+  var cards;
+  var openCard;
+  var setPinId = function (elements) {
+    [].slice.call(elements)
+      .map(function (element, index) {
+        element.dataset.id = index;
+      });
+  };
+
+  var findCard = function (elements, id) {
+    var card;
+    for (var i = 0; i < elements.length; ++i) {
+      if (i === id) {
+        card = elements[i];
+        break;
+      }
+    }
+    return card;
+  };
+
+  var onInserted = function () {
+    cards = window.utils.map.querySelectorAll('.map__card');
+    pins = window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    setPinId(pins);
+  };
+
   var turnOnPage = function () {
     if (!window.utils.isMapOn) {
       window.utils.isMapOn = true;
       window.map.turnOn();
       window.form.turnOn();
+      document.addEventListener('DOMNodeInserted', onInserted);
     }
   };
 
@@ -19,22 +46,22 @@
   };
 
   var openAdvert = function (evt) {
-    if (!pins) {
-      pins = window.utils.mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
-      window.map.setPinId(pins);
-    }
+    document.removeEventListener('DOMNodeInserted', onInserted);
     var closest = evt.target.closest('.map__pin:not(.map__pin--main)');
     if (closest) {
-      var tempPinId = closest.dataset.id;
+      var tempPinId = Number(closest.dataset.id);
       if (pinClicked) {
         pinClicked.classList.remove('map__pin--active');
       }
       pinClicked = closest;
       pinClicked.classList.add('map__pin--active');
       if (pinId && tempPinId !== pinId || !pinId) {
+        if (typeof pinId !== 'undefined' && pinId !== null) {
+          window.map.hideCard(findCard(cards, pinId));
+        }
         pinId = tempPinId;
-        window.map.removeCard();
-        window.map.addCard(window.card.render, pinId);
+        openCard = findCard(cards, pinId);
+        window.map.showCard(openCard);
       } else {
         evt.preventDefault();
       }
@@ -43,10 +70,9 @@
   };
 
   var closeAdvert = function () {
-    window.map.removeCard();
+    window.map.hideCard(openCard);
     pinClicked.classList.remove('map__pin--active');
     pinId = null;
-    pinClicked = null;
     document.removeEventListener('keydown', onKeyDown);
   };
 
@@ -70,7 +96,7 @@
   });
   window.utils.map.addEventListener('click', function (evt) {
     if (evt.target.className === 'popup__close') {
-      closeAdvert();
+      closeAdvert(evt);
     }
   });
 })();

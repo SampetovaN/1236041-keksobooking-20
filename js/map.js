@@ -17,12 +17,11 @@
   var addPins = function (adverts) {
     window.utils.mapPins.appendChild(createFragment(adverts, window.pin.render));
   };
-  var removeCard = function () {
-    var cardPopup = window.utils.map.querySelector('.map__card.popup');
-    if (cardPopup) {
-      cardPopup.parentNode.removeChild(cardPopup);
-    }
-
+  var showCard = function (card) {
+    card.style.display = 'block';
+  };
+  var hideCard = function (card) {
+    card.style.display = 'none';
   };
 
   var errorHandler = function (errorMessage) {
@@ -47,17 +46,10 @@
     window.load(successHandler, errorHandler);
   };
 
-  var setPinId = function (elements) {
-    [].slice.call(elements)
-      .map(function (element, index) {
-        element.dataset.id = index;
-      });
-  };
-
   window.map = {
     turnOn: turnOnMap,
     addCards: addCards,
-    setPinId: setPinId,
-    removeCard: removeCard,
+    hideCard: hideCard,
+    showCard: showCard
   };
 })();
