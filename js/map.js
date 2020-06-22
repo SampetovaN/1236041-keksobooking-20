@@ -24,26 +24,36 @@
     card.style.display = 'none';
   };
 
-  var errorHandler = function (errorMessage) {
+  var onError = function (errorMessage) {
     var errorBlock = document.createElement('div');
-    errorBlock.style = 'z-index: 100; margin: auto; text-align: center; background-color: red;';
-    errorBlock.style.position = 'absolute';
-    errorBlock.style.left = 0;
-    errorBlock.style.right = 0;
-    errorBlock.style.fontSize = '30px';
-    errorBlock.style.top = '40%';
+    var style = errorBlock.style;
+    style.zIndex = '100';
+    style.margin = 'auto';
+    style.textAlign = 'center';
+    style.backgroundColor = 'red';
+    style.position = 'absolute';
+    style.position = 'absolute';
+    style.left = 0;
+    style.right = 0;
+    style.fontSize = '30px';
+    style.top = '40%';
     errorBlock.textContent = errorMessage;
     window.utils.map.insertBefore(errorBlock, window.utils.mapPins);
+    setTimeout(removeBlock, 2000, errorBlock);
   };
 
-  var successHandler = function (adverts) {
-    addCards(adverts);
+  var onSuccess = function (adverts) {
     addPins(adverts);
+    addCards(adverts);
+    window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.enableBlock);
   };
-
+  var removeBlock = function (block) {
+    block.remove();
+    block = null;
+  };
   var turnOnMap = function () {
     window.utils.map.classList.remove('map--faded');
-    window.load(successHandler, errorHandler);
+    window.load(onSuccess, onError);
   };
 
   window.map = {

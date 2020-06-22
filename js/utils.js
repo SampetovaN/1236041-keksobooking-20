@@ -9,6 +9,7 @@
   };
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_BUTTON = 'Enter';
+  var ESCAPE_BUTTON = 'Escape';
   var map = document.querySelector('.map');
   var mapPins = map.querySelector('.map__pins');
   var filterForm = map.querySelector('.map__filters');
@@ -44,6 +45,12 @@
     isEnterEvent: function (evt, action) {
       if (evt.key === ENTER_BUTTON) {
         action(evt);
+      }
+    },
+    isEscEvent: function (evt, action) {
+      if (evt.key === ESCAPE_BUTTON) {
+        evt.preventDefault();
+        action();
       }
     }
   };

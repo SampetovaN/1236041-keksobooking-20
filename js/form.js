@@ -13,12 +13,11 @@
   var advertPrice = window.utils.advertForm.querySelector('#price');
   var advertCheckIn = window.utils.advertForm.querySelector('#timein');
   var advertCheckOut = window.utils.advertForm.querySelector('#timeout');
-  var capacityValues = ['1', '2', '3'];
   var guestToCapacity = {
-    1: capacityValues.slice(0, 1),
-    2: capacityValues.slice(0, 2),
-    3: capacityValues,
-    100: '0'
+    1: ['1'],
+    2: ['1', '2'],
+    3: ['1', '2', '3'],
+    100: ['0'],
   };
   var guestToConstraint = {
     1: 'Для одной комнаты гостей не может быть больше одного',
@@ -90,7 +89,6 @@
 
   var turnOnForm = function () {
     window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.enableBlock);
-    window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.enableBlock);
     window.utils.advertAddress.value = formatMainPinAddress(window.common.isMapOn);
     window.utils.advertForm.classList.remove('ad-form--disabled');
     checkCapacity();

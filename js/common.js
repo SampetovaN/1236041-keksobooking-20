@@ -2,7 +2,6 @@
 
 (function () {
   window.common = {
-    isMapOn: false,
-    ESCAPE_BUTTON: 'Escape'
+    isMapOn: false
   };
 })();

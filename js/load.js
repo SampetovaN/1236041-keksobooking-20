@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var TIMEOUT_MS = 10000;
   var URL = 'https://javascript.pages.academy/keksobooking/data';
   window.load = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -19,7 +20,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = TIMEOUT_MS;
     xhr.send();
   };
 

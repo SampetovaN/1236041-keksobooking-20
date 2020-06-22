@@ -1,7 +1,9 @@
 'use strict';
 (function () {
-  var PINS_SELECTOR = '.map__pin:not(.map__pin--main)';
-  var PIN_ACTIVE_SELECTOR = 'map__pin--active';
+  var Style = {
+    PINS: '.map__pin:not(.map__pin--main)',
+    PIN_ACTIVE: 'map__pin--active'
+  };
   var pinClicked;
   var pinId;
   var pins;
@@ -24,7 +26,16 @@
     }
     return card;
   };
+  var onMainPinMouseDown = function (evt) {
+    window.utils.isLeftMouseButton(evt, turnOnPage);
+  };
 
+  var onMainPinEnterKeyDown = function (evt) {
+    window.utils.isEnterEvent(evt, turnOnPage);
+  };
+
+  window.utils.mainPin.addEventListener('mousedown', onMainPinMouseDown);
+  window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
   var turnOnPage = function () {
     if (!window.common.isMapOn) {
       window.common.isMapOn = true;
@@ -32,28 +43,27 @@
       window.form.turnOn();
       document.addEventListener('DOMNodeInserted', function () {
         cards = window.utils.map.querySelectorAll('.map__card');
-        pins = window.utils.mapPins.querySelectorAll(PINS_SELECTOR);
+        pins = window.utils.mapPins.querySelectorAll(Style.PINS);
         setPinId(pins);
       });
+      window.utils.mainPin.removeEventListener('mousedown', onMainPinMouseDown);
+      window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
     }
   };
 
   var onKeyDown = function (evt) {
-    if (evt.key === window.common.ESCAPE_BUTTON) {
-      evt.preventDefault();
-      closeAdvert();
-    }
+    window.utils.isEscEvent(evt, closeAdvert);
   };
 
   var openAdvert = function (evt) {
-    var closest = evt.target.closest(PINS_SELECTOR);
+    var closest = evt.target.closest(Style.PINS);
     if (closest) {
       var tempPinId = Number(closest.dataset.id);
       if (pinClicked) {
-        pinClicked.classList.remove(PIN_ACTIVE_SELECTOR);
+        pinClicked.classList.remove(Style.PIN_ACTIVE);
       }
       pinClicked = closest;
-      pinClicked.classList.add(PIN_ACTIVE_SELECTOR);
+      pinClicked.classList.add(Style.PIN_ACTIVE);
       if (pinId && tempPinId !== pinId || !pinId) {
         if (typeof pinId !== 'undefined' && pinId !== null) {
           window.map.hideCard(findCard(cards, pinId));
@@ -70,7 +80,7 @@
 
   var closeAdvert = function () {
     window.map.hideCard(openCard);
-    pinClicked.classList.remove(PIN_ACTIVE_SELECTOR);
+    pinClicked.classList.remove(Style.PIN_ACTIVE);
     pinId = null;
     pinClicked = null;
     openCard = null;
@@ -80,13 +90,6 @@
   window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.disableBlock);
   window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.disableBlock);
   window.utils.advertAddress.value = window.form.formatMainPinAddress(window.common.isMapOn);
-  window.utils.mainPin.addEventListener('mousedown', function (evt) {
-    window.utils.isLeftMouseButton(evt, turnOnPage);
-
-  });
-  window.utils.mainPin.addEventListener('keydown', function (evt) {
-    window.utils.isEnterEvent(evt, turnOnPage);
-  });
   window.utils.mapPins.addEventListener('click', function (evt) {
     openAdvert(evt);
   });
