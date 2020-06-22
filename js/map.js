@@ -32,7 +32,6 @@
     style.textAlign = 'center';
     style.backgroundColor = 'red';
     style.position = 'absolute';
-    style.position = 'absolute';
     style.left = 0;
     style.right = 0;
     style.fontSize = '30px';
