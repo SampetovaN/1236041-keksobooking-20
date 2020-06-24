@@ -13,15 +13,15 @@
     return coordinate > maxCoordinate ? maxCoordinate : coordinate;
   };
   var renderPin = function (advert) {
-    var pinClone = pinTemplate.cloneNode(true);
-    var image = pinClone.querySelector('img');
+    var pin = pinTemplate.cloneNode(true);
+    var image = pin.querySelector('img');
     var finalX = getMaxCoordinate(advert.location.x + PinSize.RADIUS, maxCoordinateX);
     var finalY = getMaxCoordinate(advert.location.y + PinSize.HEIGHT, window.utils.MapRect.BOTTOM);
     image.src = advert.author.avatar;
     image.alt = advert.offer.title;
-    pinClone.style.left = finalX + 'px';
-    pinClone.style.top = finalY + 'px';
-    return pinClone;
+    pin.style.left = finalX + 'px';
+    pin.style.top = finalY + 'px';
+    return pin;
   };
 
   window.pin = {

@@ -73,7 +73,7 @@
     }
     colorizeBorder(advertTitle, isValid);
   };
-  var changeMinPrice = function (minCost) {
+  var changeMinCost = function (minCost) {
     advertPrice.placeholder = minCost;
     advertPrice.min = minCost;
   };
@@ -89,7 +89,7 @@
 
   var turnOnForm = function () {
     window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.enableBlock);
-    window.utils.advertAddress.value = formatMainPinAddress(window.common.isMapOn);
+    window.utils.advertAddress.value = formatMainPinAddress(true);
     window.utils.advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
@@ -101,11 +101,11 @@
     checkCapacity();
   });
   advertType.addEventListener('change', function () {
-    changeMinPrice(typeToMinCost[advertType.value]);
+    changeMinCost(typeToMinCost[advertType.value]);
     checkAdvertPrice();
   });
   advertType.addEventListener('keydown', function () {
-    changeMinPrice(typeToMinCost[advertType.value]);
+    changeMinCost(typeToMinCost[advertType.value]);
     checkAdvertPrice();
   });
   advertTitle.addEventListener('input', function () {

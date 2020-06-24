@@ -77,28 +77,28 @@
   };
 
   var renderCard = function (advert) {
-    var cardClone = cardTemplate.cloneNode(true);
-    var featuresContainer = cardClone.querySelector('.popup__features');
-    var photosContainer = cardClone.querySelector('.popup__photos');
-    var photo = cardClone.querySelector('.popup__photo');
-    var capacity = cardClone.querySelector('.popup__text--capacity');
+    var card = cardTemplate.cloneNode(true);
+    var featuresContainer = card.querySelector('.popup__features');
+    var photosContainer = card.querySelector('.popup__photos');
+    var photo = card.querySelector('.popup__photo');
+    var capacity = card.querySelector('.popup__text--capacity');
     featuresContainer.innerHTML = '';
     photosContainer.innerHTML = '';
     featuresContainer.appendChild(generateFeatures(advert.offer.features));
     photosContainer.appendChild(generatePhotos(advert.offer.photos, photo));
     hideBlock(featuresContainer);
     hideBlock(photosContainer);
-    cardClone.querySelector('.popup__title').textContent = advert.offer.title;
-    cardClone.querySelector('.popup__text--address').textContent = advert.offer.address;
-    cardClone.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
-    cardClone.querySelector('.popup__type').textContent = typeToHouseName[advert.offer.type];
+    card.querySelector('.popup__title').textContent = advert.offer.title;
+    card.querySelector('.popup__text--address').textContent = advert.offer.address;
+    card.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
+    card.querySelector('.popup__type').textContent = typeToHouseName[advert.offer.type];
     fillInCapacity(capacity, advert.offer.rooms, advert.offer.guests);
-    cardClone.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
-    cardClone.querySelector('.popup__description').textContent = advert.offer.description;
-    cardClone.querySelector('.popup__avatar').src = advert.author.avatar;
-    cardClone.style.display = 'none';
-    return cardClone;
+    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
+    card.querySelector('.popup__description').textContent = advert.offer.description;
+    card.querySelector('.popup__avatar').src = advert.author.avatar;
+    return card;
   };
+
 
   window.card = {
     render: renderCard
