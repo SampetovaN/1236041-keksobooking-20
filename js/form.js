@@ -129,7 +129,7 @@
 
   window.form = {
     formatMainPinAddress: formatMainPinAddress,
-    turnOn: turnOnForm,
+    turnOn: turnOnForm
   };
 })();
 

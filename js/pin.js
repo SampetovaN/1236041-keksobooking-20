@@ -3,7 +3,7 @@
 (function () {
   var PinSize = {
     HEIGHT: 70,
-    RADIUS: 50 / 2,
+    RADIUS: 50 / 2
   };
   var maxCoordinateX = window.utils.MapRect.RIGHT - PinSize.RADIUS;
   var pinTemplate = document.querySelector('#pin')

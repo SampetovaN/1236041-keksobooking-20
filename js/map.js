@@ -2,6 +2,7 @@
 
 (function () {
   var ERROR_TIMEOUT_MS = 2000;
+  var MAX_ADVERTS = 5;
   var Style = {
     PINS: '.map__pin:not(.map__pin--main)',
     PIN_ACTIVE: 'map__pin--active',
@@ -71,7 +72,6 @@
 
       document.addEventListener('keydown', onKeyDown);
     });
-
     return pin;
   };
 
@@ -79,10 +79,29 @@
     window.utils.map.append.apply(window.utils.map, adverts.map(renderPin));
   };
   var onSuccess = function (adverts) {
-    addPins(adverts);
+    adverts = adverts.filter(function (element) {
+      return element.offer;
+    });
+    var advertsMap = adverts.slice(0, MAX_ADVERTS);
+    addPins(advertsMap);
     window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.enableBlock);
+    filterContainer.addEventListener('change', function (evt) {
+      if (evt.target.id === 'housing-type') {
+        if (evt.target.value === 'any') {
+          addPins(advertsMap);
+        } else {
+          var filterAdverts = adverts.filter(function (element) {
+            return element.offer.type === evt.target.value;
+          }).slice(0, MAX_ADVERTS);
+          var pins = document.querySelectorAll(Style.PINS);
+          pins.forEach(removeBlock);
+          addPins(filterAdverts);
+        }
+      }
+      removeCard();
+      window.utils.map.classList.remove(Style.PIN_ACTIVE);
+    });
   };
-
   var turnOnMap = function () {
     window.utils.map.classList.remove('map--faded');
     window.load(onSuccess, onError);
@@ -95,6 +114,6 @@
     }
   });
   window.map = {
-    turnOn: turnOnMap
+    turnOn: turnOnMap,
   };
 })();
