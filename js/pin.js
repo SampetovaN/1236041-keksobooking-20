@@ -5,18 +5,15 @@
     HEIGHT: 70,
     RADIUS: 50 / 2
   };
-  var maxCoordinateX = window.utils.MapRect.RIGHT - PinSize.RADIUS;
   var pinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
-  var getMaxCoordinate = function (coordinate, maxCoordinate) {
-    return coordinate > maxCoordinate ? maxCoordinate : coordinate;
-  };
+
   var renderPin = function (advert) {
     var pin = pinTemplate.cloneNode(true);
     var image = pin.querySelector('img');
-    var finalX = getMaxCoordinate(advert.location.x + PinSize.RADIUS, maxCoordinateX);
-    var finalY = getMaxCoordinate(advert.location.y + PinSize.HEIGHT, window.utils.MapRect.BOTTOM);
+    var finalX = advert.location.x - PinSize.RADIUS;
+    var finalY = advert.location.y - PinSize.HEIGHT;
     image.src = advert.author.avatar;
     image.alt = advert.offer.title;
     pin.style.left = finalX + 'px';

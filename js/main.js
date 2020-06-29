@@ -16,9 +16,5 @@
     window.utils.mainPin.removeEventListener('mousedown', onMainPinMouseDown);
     window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
   };
-
-  window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.disableBlock);
-  window.utils.turnBlocks(window.utils.filterFormBlocks, window.utils.disableBlock);
-  window.utils.advertAddress.value = window.form.formatMainPinAddress(false);
 })();
 

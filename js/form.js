@@ -6,18 +6,21 @@
   };
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
-  var capacity = window.utils.advertForm.querySelector('#capacity');
-  var roomNumber = window.utils.advertForm.querySelector('#room_number');
-  var advertTitle = window.utils.advertForm.querySelector('#title');
-  var advertType = window.utils.advertForm.querySelector('#type');
-  var advertPrice = window.utils.advertForm.querySelector('#price');
-  var advertCheckIn = window.utils.advertForm.querySelector('#timein');
-  var advertCheckOut = window.utils.advertForm.querySelector('#timeout');
+  var advertForm = document.querySelector('.ad-form');
+  var advertFormBlocks = advertForm.children;
+  var advertAddress = advertForm.querySelector('#address');
+  var capacity = advertForm.querySelector('#capacity');
+  var roomNumber = advertForm.querySelector('#room_number');
+  var advertTitle = advertForm.querySelector('#title');
+  var advertType = advertForm.querySelector('#type');
+  var advertPrice = advertForm.querySelector('#price');
+  var advertCheckIn = advertForm.querySelector('#timein');
+  var advertCheckOut = advertForm.querySelector('#timeout');
   var guestToCapacity = {
     1: ['1'],
     2: ['1', '2'],
     3: ['1', '2', '3'],
-    100: ['0'],
+    100: ['0']
   };
   var guestToConstraint = {
     1: 'Для одной комнаты гостей не может быть больше одного',
@@ -88,12 +91,14 @@
   };
 
   var turnOnForm = function () {
-    window.utils.turnBlocks(window.utils.advertFormBlocks, window.utils.enableBlock);
-    window.utils.advertAddress.value = formatMainPinAddress(true);
-    window.utils.advertForm.classList.remove('ad-form--disabled');
+    window.utils.turnElements(advertFormBlocks, window.utils.enableElement);
+    advertAddress.value = formatMainPinAddress(true);
+    advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
   };
+  window.utils.turnElements(advertFormBlocks, window.utils.disableElement);
+  advertAddress.value = formatMainPinAddress(false);
   capacity.addEventListener('change', function () {
     checkCapacity();
   });
@@ -101,10 +106,6 @@
     checkCapacity();
   });
   advertType.addEventListener('change', function () {
-    changeMinCost(typeToMinCost[advertType.value]);
-    checkAdvertPrice();
-  });
-  advertType.addEventListener('keydown', function () {
     changeMinCost(typeToMinCost[advertType.value]);
     checkAdvertPrice();
   });
