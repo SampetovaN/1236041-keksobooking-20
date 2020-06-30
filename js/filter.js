@@ -3,7 +3,9 @@
 (function () {
   var onFilterChange = null;
   var filterForm = window.utils.map.querySelector('.map__filters');
-
+  var filterValidAdvert = function (advert) {
+    return advert.offer && advert.location;
+  };
   var setOnFilterChange = function (onChange) {
     onFilterChange = onChange;
   };
@@ -23,6 +25,7 @@
 
   window.filter = {
     checkOption: checkOption,
-    setOnChange: setOnFilterChange
+    setOnChange: setOnFilterChange,
+    checkAdvert: filterValidAdvert
   };
 })();

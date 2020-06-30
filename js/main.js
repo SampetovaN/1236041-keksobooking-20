@@ -10,6 +10,7 @@
     window.utils.isEnterEvent(evt, turnOnPage);
   };
   var onLoadSuccess = function (adverts) {
+    adverts = adverts.filter(window.filter.checkAdvert);
     window.utils.map.classList.remove('map--faded');
     window.map.addPins(adverts.slice(0, MAX_ADVERTS));
     filterFormBlocks.forEach(window.utils.unsetDisabled);
