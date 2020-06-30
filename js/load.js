@@ -3,6 +3,7 @@
 (function () {
   var TIMEOUT_MS = 10000;
   var URL = 'https://javascript.pages.academy/keksobooking/data';
+
   window.load = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';

@@ -7,35 +7,25 @@
     TOP: 130,
     BOTTOM: 630,
   };
+  var StylePin = {
+    PINS: '.map__pin:not(.map__pin--main)',
+    PIN_ACTIVE: 'map__pin--active'
+  };
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_BUTTON = 'Enter';
   var ESCAPE_BUTTON = 'Escape';
   var map = document.querySelector('.map');
-  var mapPins = map.querySelector('.map__pins');
-  var filterForm = map.querySelector('.map__filters');
-  var mainPin = mapPins.querySelector('.map__pin--main');
-  var advertForm = document.querySelector('.ad-form');
-  var advertAddress = advertForm.querySelector('#address');
-
+  var mainPin = map.querySelector('.map__pin--main');
   window.utils = {
     MapRect: MapRect,
     map: map,
-    mapPins: mapPins,
+    StylePin: StylePin,
     mainPin: mainPin,
-    advertAddress: advertAddress,
-    advertForm: advertForm,
-    advertFormBlocks: advertForm.children,
-    filterFormBlocks: filterForm.children,
-    disableBlock: function (block) {
-      block.disabled = true;
+    setDisabled: function (element) {
+      element.disabled = true;
     },
-    enableBlock: function (block) {
-      block.disabled = false;
-    },
-    turnBlocks: function (blocks, turnFunction) {
-      for (var i = 0; i < blocks.length; i++) {
-        turnFunction(blocks[i]);
-      }
+    unsetDisabled: function (element) {
+      element.disabled = false;
     },
     isLeftMouseButton: function (evt, action) {
       if (evt.button === LEFT_MOUSE_BUTTON) {
@@ -52,6 +42,12 @@
         evt.preventDefault();
         action();
       }
+    },
+    isFunction: function (value) {
+      return typeof value === 'function';
+    },
+    removeElement: function (element) {
+      element.remove();
     }
   };
 })();
