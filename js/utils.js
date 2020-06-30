@@ -5,7 +5,7 @@
     LEFT: 0,
     RIGHT: 1200,
     TOP: 130,
-    BOTTOM: 630
+    BOTTOM: 630,
   };
   var StylePin = {
     PINS: '.map__pin:not(.map__pin--main)',
@@ -21,16 +21,11 @@
     map: map,
     StylePin: StylePin,
     mainPin: mainPin,
-    disableElement: function (element) {
+    setDisabled: function (element) {
       element.disabled = true;
     },
-    enableElement: function (element) {
+    unsetDisabled: function (element) {
       element.disabled = false;
-    },
-    turnElements: function (elements, turnFunction) {
-      for (var i = 0; i < elements.length; i++) {
-        turnFunction(elements[i]);
-      }
     },
     isLeftMouseButton: function (evt, action) {
       if (evt.button === LEFT_MOUSE_BUTTON) {
@@ -48,12 +43,11 @@
         action();
       }
     },
-    isFunction: function (variable) {
-      return typeof variable === 'function';
+    isFunction: function (value) {
+      return typeof value === 'function';
     },
     removeElement: function (element) {
       element.remove();
-      element = null;
     }
   };
 })();

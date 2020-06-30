@@ -10,11 +10,13 @@
     palace: 'Дворец'
   };
   var onCardRemove = null;
+  var currentCard = null;
   var removeCard = function () {
-    if (window.card.item === null) {
+    if (currentCard === null) {
       return;
     }
-    window.utils.removeElement(window.card.item);
+    window.utils.removeElement(currentCard);
+    currentCard = null;
     if (window.utils.isFunction(onCardRemove)) {
 
       onCardRemove();
@@ -24,7 +26,6 @@
 
   var setOnCardRemove = function (onRemove) {
     onCardRemove = onRemove;
-
   };
 
   var getWordEnding = function (number, forms) {
@@ -96,44 +97,45 @@
       capacity.style.display = 'none';
     }
   };
-  var onPopUpClose = function (evt) {
-    if (evt.target.className === 'popup__close') {
-      window.card.remove();
-      window.utils.map.classList.remove(window.utils.StylePin.PIN_ACTIVE);
-    }
+  var onCardClick = function () {
+    removeCard();
   };
 
-  var renderCard = function (advert) {
-    var cardClone = cardTemplate.cloneNode(true);
+  var createCard = function (advert) {
+    var card = cardTemplate.cloneNode(true);
     var offer = advert.offer;
-    var featuresContainer = cardClone.querySelector('.popup__features');
-    var photosContainer = cardClone.querySelector('.popup__photos');
-    var photo = cardClone.querySelector('.popup__photo');
-    var capacity = cardClone.querySelector('.popup__text--capacity');
+    var featuresContainer = card.querySelector('.popup__features');
+    var photosContainer = card.querySelector('.popup__photos');
+    var photo = card.querySelector('.popup__photo');
+    var capacity = card.querySelector('.popup__text--capacity');
     featuresContainer.innerHTML = '';
     photosContainer.innerHTML = '';
     featuresContainer.appendChild(generateFeatures(offer.features));
     photosContainer.appendChild(generatePhotos(offer.photos, photo));
     hideBlock(featuresContainer);
     hideBlock(photosContainer);
-    cardClone.querySelector('.popup__title').textContent = offer.title;
-    cardClone.querySelector('.popup__text--address').textContent = offer.address;
-    cardClone.querySelector('.popup__text--price').textContent = offer.price + '₽/ночь';
-    cardClone.querySelector('.popup__type').textContent = typeToHouseName[offer.type];
+    card.querySelector('.popup__title').textContent = offer.title;
+    card.querySelector('.popup__text--address').textContent = offer.address;
+    card.querySelector('.popup__text--price').textContent = offer.price + '₽/ночь';
+    card.querySelector('.popup__type').textContent = typeToHouseName[offer.type];
     fillInCapacity(capacity, offer.rooms, offer.guests);
-    cardClone.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
-    cardClone.querySelector('.popup__description').textContent = offer.description;
-    cardClone.querySelector('.popup__avatar').src = advert.author.avatar;
-    cardClone.querySelector('.popup__close').addEventListener('click', onPopUpClose);
-    return cardClone;
+    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout;
+    card.querySelector('.popup__description').textContent = offer.description;
+    card.querySelector('.popup__avatar').src = advert.author.avatar;
+    card.querySelector('.popup__close').addEventListener('click', onCardClick);
+    return card;
+  };
+
+  var renderCard = function (container, advert) {
+    currentCard = createCard(advert);
+    container.append(currentCard);
   };
 
 
   window.card = {
     render: renderCard,
     remove: removeCard,
-    setOnRemove: setOnCardRemove,
-    item: null
+    setOnRemove: setOnCardRemove
   };
 
 })();

@@ -12,16 +12,17 @@
   var renderPin = function (advert) {
     var pin = pinTemplate.cloneNode(true);
     var image = pin.querySelector('img');
-    var finalX = advert.location.x - PinSize.RADIUS;
-    var finalY = advert.location.y - PinSize.HEIGHT;
     image.src = advert.author.avatar;
     image.alt = advert.offer.title;
-    pin.style.left = finalX + 'px';
-    pin.style.top = finalY + 'px';
+    pin.style.left = (advert.location.x - PinSize.RADIUS) + 'px';
+    pin.style.top = (advert.location.y - PinSize.HEIGHT) + 'px';
     return pin;
   };
-
+  var removePins = function () {
+    window.utils.map.querySelectorAll(window.utils.StylePin.PINS).forEach(window.utils.removeElement);
+  };
   window.pin = {
-    render: renderPin
+    render: renderPin,
+    remove: removePins
   };
 })();
