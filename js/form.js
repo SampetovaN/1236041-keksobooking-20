@@ -1,14 +1,9 @@
 'use strict';
 (function () {
-  var MainPinSize = {
-    HEIGHT: 83,
-    RADIUS: 65 / 2,
-  };
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
   var advertForm = document.querySelector('.ad-form');
   var advertFormBlocks = advertForm.childNodes;
-  var advertAddress = advertForm.querySelector('#address');
   var capacity = advertForm.querySelector('#capacity');
   var roomNumber = advertForm.querySelector('#room_number');
   var advertTitle = advertForm.querySelector('#title');
@@ -36,13 +31,6 @@
   };
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
-  };
-
-  var formatMainPinAddress = function (isTurnOn) {
-    var top = parseInt(window.utils.mainPin.style.top, 10);
-    var addressTop = top + (isTurnOn ? MainPinSize.HEIGHT : MainPinSize.RADIUS);
-    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + MainPinSize.RADIUS;
-    return Math.round(addressLeft) + ', ' + Math.round(addressTop);
   };
   var checkCapacity = function () {
     var isValid = guestToCapacity[roomNumber.value].indexOf(capacity.value) !== -1;
@@ -92,13 +80,12 @@
 
   var turnOnForm = function () {
     advertFormBlocks.forEach(window.utils.unsetDisabled);
-    advertAddress.value = formatMainPinAddress(true);
     advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
   };
   advertFormBlocks.forEach(window.utils.setDisabled);
-  advertAddress.value = formatMainPinAddress(false);
+
   capacity.addEventListener('change', function () {
     checkCapacity();
   });
@@ -129,7 +116,6 @@
   });
 
   window.form = {
-    formatMainPinAddress: formatMainPinAddress,
     turnOn: turnOnForm
   };
 })();
