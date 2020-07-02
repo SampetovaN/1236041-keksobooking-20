@@ -2,12 +2,23 @@
 (function () {
   var MAX_ADVERTS = 5;
   var filterFormBlocks = window.utils.map.querySelector('.map__filters').childNodes;
-  var onMainPinMouseDown = function (evt) {
-    window.utils.isLeftMouseButton(evt, turnOnPage);
+  var onMainPinStop;
+  var stopTurnOn = function () {
+    if (window.utils.isFunction(onMainPinStop)) {
+      onMainPinStop();
+      onMainPinStop = null;
+    }
   };
 
+  var setOnMainPinClick = function (onClick) {
+    onMainPinStop = onClick;
+  };
   var onMainPinEnterKeyDown = function (evt) {
     window.utils.isEnterEvent(evt, turnOnPage);
+  };
+  var onMainPinMouseDown = function (evt) {
+    window.utils.isLeftMouseButton(evt, turnOnPage);
+    window.move.mouse();
   };
   var onLoadSuccess = function (adverts) {
     adverts = adverts.filter(window.filter.checkAdvert);
@@ -33,9 +44,13 @@
   window.utils.mainPin.addEventListener('mousedown', onMainPinMouseDown);
   window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
   var turnOnPage = function () {
-    window.load(onLoadSuccess, window.error.load);
-    window.form.turnOn();
-    window.utils.mainPin.removeEventListener('mousedown', onMainPinMouseDown);
+    if (onMainPinStop !== null) {
+      setOnMainPinClick(function () {
+        window.load(onLoadSuccess, window.error.load);
+        window.form.turnOn();
+      });
+      stopTurnOn();
+    }
     window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
   };
 })();
