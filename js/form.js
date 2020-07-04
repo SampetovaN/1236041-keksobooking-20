@@ -3,7 +3,7 @@
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
   var advertForm = document.querySelector('.ad-form');
-  var advertFormBlocks = advertForm.childNodes;
+  var advertFormElements = advertForm.childNodes;
   var capacity = advertForm.querySelector('#capacity');
   var roomNumber = advertForm.querySelector('#room_number');
   var advertTitle = advertForm.querySelector('#title');
@@ -15,19 +15,19 @@
     1: ['1'],
     2: ['1', '2'],
     3: ['1', '2', '3'],
-    100: ['0']
+    100: ['0'],
   };
   var guestToConstraint = {
     1: 'Для одной комнаты гостей не может быть больше одного',
     2: 'Для двух комнат гостей не может быть больше двух',
     3: 'Для трех комнат гостей не может быть больше трех',
-    100: 'Помещение сдается не для гостей'
+    100: 'Помещение сдается не для гостей',
   };
   var typeToMinCost = {
     flat: '1000',
     bungalo: '0',
     house: '5000',
-    palace: '10000'
+    palace: '10000',
   };
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
@@ -79,12 +79,12 @@
   };
 
   var turnOnForm = function () {
-    advertFormBlocks.forEach(window.utils.unsetDisabled);
+    advertFormElements.forEach(window.utils.unsetDisabled);
     advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
   };
-  advertFormBlocks.forEach(window.utils.setDisabled);
+  advertFormElements.forEach(window.utils.setDisabled);
 
   capacity.addEventListener('change', function () {
     checkCapacity();
@@ -115,8 +115,16 @@
     sunchronizeTime(advertCheckOut, advertCheckIn);
   });
 
+  var resetForm = function () {
+    advertForm.reset();
+    changeMinCost(typeToMinCost[advertType.value]);
+    advertFormElements.forEach(window.utils.setDisabled);
+    advertForm.classList.add('ad-form--disabled');
+  };
+
   window.form = {
-    turnOn: turnOnForm
+    turnOn: turnOnForm,
+    reset: resetForm
   };
 })();
 

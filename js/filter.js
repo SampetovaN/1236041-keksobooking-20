@@ -23,9 +23,13 @@
 
   filterForm.addEventListener('change', onFilterFormChange);
 
+  var resetFilter = function () {
+    filterForm.reset();
+  };
   window.filter = {
     checkOption: checkOption,
     setOnChange: setOnFilterChange,
-    checkAdvert: filterValidAdvert
+    checkAdvert: filterValidAdvert,
+    reset: resetFilter
   };
 })();

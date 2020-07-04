@@ -60,6 +60,7 @@
     document.addEventListener('mouseup', onMouseUp);
   };
   window.move = {
-    mouse: moveMouse
+    mouse: moveMouse,
+    formatMainPinAddress: formatMainPinAddress
   };
 })();
