@@ -4,6 +4,7 @@
   var MAX_TITLE_LENGTH = 100;
   var advertForm = document.querySelector('.ad-form');
   var advertFormElements = advertForm.childNodes;
+  var advertAddress = advertForm.querySelector('#address');
   var capacity = advertForm.querySelector('#capacity');
   var roomNumber = advertForm.querySelector('#room_number');
   var advertTitle = advertForm.querySelector('#title');
@@ -11,6 +12,8 @@
   var advertPrice = advertForm.querySelector('#price');
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
+  advertTitle.value = 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
+  advertPrice.value = '2000';
   var guestToCapacity = {
     1: ['1'],
     2: ['1', '2'],
@@ -27,7 +30,7 @@
     flat: '1000',
     bungalo: '0',
     house: '5000',
-    palace: '10000',
+    palace: '10000'
   };
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
@@ -68,7 +71,13 @@
     advertPrice.placeholder = minCost;
     advertPrice.min = minCost;
   };
-
+  var formatMainPinAddress = function (isTurnOn) {
+    var top = parseInt(window.utils.mainPin.style.top, 10);
+    var addressTop = top + (isTurnOn ? window.utils.MainPinSize.HEIGHT : window.utils.MainPinSize.RADIUS);
+    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
+    advertAddress.value = Math.round(addressLeft) + ', ' + Math.round(addressTop);
+  };
+  formatMainPinAddress(false);
   var checkAdvertPrice = function () {
     var isValid = !(advertPrice.validity.rangeUnderflow || advertPrice.validity.rangeOverflow);
     colorizeBorder(advertPrice, isValid);
@@ -120,11 +129,13 @@
     changeMinCost(typeToMinCost[advertType.value]);
     advertFormElements.forEach(window.utils.setDisabled);
     advertForm.classList.add('ad-form--disabled');
+    formatMainPinAddress(false);
   };
 
   window.form = {
     turnOn: turnOnForm,
-    reset: resetForm
+    reset: resetForm,
+    formatMainPinAddress: formatMainPinAddress
   };
 })();
 

@@ -5,10 +5,8 @@
     TOP: 375
   };
   var resetMainPin = function () {
-    var mainPinStyle = window.utils.mainPin.style;
-    mainPinStyle.left = CoordinatesMainPin.LEFT + 'px';
-    mainPinStyle.top = CoordinatesMainPin.TOP + 'px';
-    window.move.formatMainPinAddress(false);
+    window.utils.mainPinStyle.left = CoordinatesMainPin.LEFT + 'px';
+    window.utils.mainPinStyle.top = CoordinatesMainPin.TOP + 'px';
   };
   var resetPage = function () {
     resetMainPin();
@@ -18,7 +16,7 @@
     window.pin.remove();
     window.utils.map.classList.add('map--faded');
   };
-  window.reset = {
-    page: resetPage
+  window.update = {
+    resetPage: resetPage
   };
 })();

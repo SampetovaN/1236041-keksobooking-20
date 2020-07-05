@@ -1,39 +1,21 @@
 'use strict';
 (function () {
   var MAX_ADVERTS = 5;
-  var filterFormElements = window.utils.map.querySelector('.map__filters').childNodes;
+  var filterFormInputs = window.utils.map.querySelector('.map__filters').childNodes;
   var advertForm = document.querySelector('.ad-form');
-  var successElement = null;
-  var main = document.querySelector('main');
-  var activatePage = function () {
-    window.load(onLoadSuccess, window.error.load);
-    window.form.turnOn();
-  };
-  var setOnFirstClick = activatePage;
-  var preventTurnOnPage = function () {
-    if (window.utils.isFunction(setOnFirstClick)) {
-      setOnFirstClick();
-      setOnFirstClick = null;
-    }
-  };
-  var unactivatePage = function () {
-    window.reset.page();
-    window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
-    setOnFirstClick = activatePage;
-    filterFormElements.forEach(window.utils.setDisabled);
+  var onMainPinFirstClick = function (evt) {
+    window.utils.isLeftMouseButton(evt, turnOnPage);
   };
   var onMainPinEnterKeyDown = function (evt) {
     window.utils.isEnterEvent(evt, turnOnPage);
   };
-  var onMainPinMouseDown = function (evt) {
-    window.utils.isLeftMouseButton(evt, turnOnPage);
-    window.move.mouse();
+  var onMainPinMouseDown = function () {
+    window.motion.moveMouse();
   };
   var onLoadSuccess = function (adverts) {
     adverts = adverts.filter(window.filter.checkAdvert);
-    window.utils.map.classList.remove('map--faded');
     window.map.addPins(adverts.slice(0, MAX_ADVERTS));
-    filterFormElements.forEach(window.utils.unsetDisabled);
+    filterFormInputs.forEach(window.utils.unsetDisabled);
     window.filter.setOnChange(function (evt) {
       var filteredAdverts = [];
       for (var i = 0; i < adverts.length; i++) {
@@ -49,40 +31,36 @@
       window.card.remove();
     });
   };
-  filterFormElements.forEach(window.utils.setDisabled);
+  var deactivatePage = function () {
+    window.update.resetPage();
+    window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
+    window.utils.mainPin.addEventListener('mousedown', onMainPinFirstClick);
+    filterFormInputs.forEach(window.utils.setDisabled);
+  };
+  filterFormInputs.forEach(window.utils.setDisabled);
   window.utils.mainPin.addEventListener('mousedown', onMainPinMouseDown);
+  window.utils.mainPin.addEventListener('mousedown', onMainPinFirstClick);
   window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
+
   var turnOnPage = function () {
-    preventTurnOnPage();
+    window.load(onLoadSuccess, window.error.onLoad);
+    window.utils.map.classList.remove('map--faded');
+    window.form.turnOn();
+    window.utils.mainPin.removeEventListener('mousedown', onMainPinFirstClick);
     window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
   };
-  var onEscKeyDown = function (evt) {
-    window.utils.isEscEvent(evt, removeSuccessMessage);
-  };
   var onUploadSuccess = function () {
-    successElement = document.querySelector('#success')
-      .content
-      .querySelector('.success')
-      .cloneNode(true);
-    main.append(successElement);
-    main.addEventListener('click', removeSuccessMessage);
-    main.addEventListener('keydown', onEscKeyDown);
-  };
-  var removeSuccessMessage = function () {
-    successElement.remove();
-    successElement = null;
-    main.removeEventListener('click', removeSuccessMessage);
-    main.removeEventListener('keydown', onEscKeyDown);
-    unactivatePage();
+    window.result.onUploadSuccess();
+    deactivatePage();
   };
 
   advertForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(advertForm), onUploadSuccess, window.error.upload);
+    window.upload(new FormData(advertForm), onUploadSuccess, window.result.onUploadError);
     evt.preventDefault();
   });
 
   advertForm.addEventListener('reset', function () {
-    unactivatePage();
+    deactivatePage();
   });
 
 })();

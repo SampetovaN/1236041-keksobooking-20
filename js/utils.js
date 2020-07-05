@@ -1,6 +1,11 @@
 'use strict';
 
 (function () {
+  var TIMEOUT_MS = 10000;
+  var MainPinSize = {
+    HEIGHT: 83,
+    RADIUS: Math.round(65 / 2)
+  };
   var MapRect = {
     LEFT: 0,
     RIGHT: 1200,
@@ -17,10 +22,12 @@
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
   window.utils = {
+    MainPinSize: MainPinSize,
     MapRect: MapRect,
     map: map,
     StylePin: StylePin,
     mainPin: mainPin,
+    mainPinStyle: mainPin.style,
     setDisabled: function (element) {
       element.disabled = true;
     },
@@ -37,10 +44,10 @@
         action(evt);
       }
     },
-    isEscEvent: function (evt, action) {
+    isEscEvent: function (evt, action, element) {
       if (evt.key === ESCAPE_BUTTON) {
         evt.preventDefault();
-        action();
+        action(evt, element);
       }
     },
     isFunction: function (value) {
@@ -48,6 +55,24 @@
     },
     removeElement: function (element) {
       element.remove();
+    },
+    setUpRequest: function (url, xhr, onSuccess, onError) {
+      xhr.responseType = 'json';
+
+      xhr.open('GET', url);
+
+      xhr.addEventListener('load', function () {
+        onSuccess(xhr.response);
+      });
+      xhr.addEventListener('error', function () {
+        onError('Произошла ошибка соединения');
+      });
+
+      xhr.addEventListener('timeout', function () {
+        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      });
+
+      xhr.timeout = TIMEOUT_MS;
     }
   };
 })();
