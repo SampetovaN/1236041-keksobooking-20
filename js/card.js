@@ -135,7 +135,7 @@
   window.card = {
     render: renderCard,
     remove: removeCard,
-    setOnRemove: setOnCardRemove
+    setOnRemove: setOnCardRemove,
   };
 
 })();

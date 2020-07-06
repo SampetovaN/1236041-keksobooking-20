@@ -2,6 +2,10 @@
 (function () {
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
+  var TIME_TO_RESET = '12:00';
+  var TYPE_TO_RESET = 'flat';
+  var CAPACITY_TO_RESET = '3';
+  var ROOM_NUMBER_TO_RESET = '1';
   var advertForm = document.querySelector('.ad-form');
   var advertFormElements = advertForm.childNodes;
   var advertAddress = advertForm.querySelector('#address');
@@ -12,6 +16,8 @@
   var advertPrice = advertForm.querySelector('#price');
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
+  var description = advertForm.querySelector('#description');
+  var advertFeatures = advertForm.querySelector('.features').childNodes;
   var guestToCapacity = {
     1: ['1'],
     2: ['1', '2'],
@@ -121,11 +127,24 @@
   advertCheckOut.addEventListener('change', function () {
     sunchronizeTime(advertCheckOut, advertCheckIn);
   });
-
-  var resetForm = function () {
-    advertForm.reset();
-    changeMinCost(typeToMinCost[advertType.value]);
+  var unsetFeature = function (element) {
+    element.checked = false;
+  };
+  var resetInputsForm = function () {
+    advertCheckOut = TIME_TO_RESET;
+    advertCheckIn = TIME_TO_RESET;
+    advertType.value = TYPE_TO_RESET;
+    capacity.value = CAPACITY_TO_RESET;
+    advertTitle.value = '';
+    advertPrice.value = '';
+    description.value = '';
+    roomNumber.value = ROOM_NUMBER_TO_RESET;
+    advertFeatures.forEach(unsetFeature);
     formatMainPinAddress(false);
+    changeMinCost(typeToMinCost[advertType.value]);
+  };
+  var resetForm = function () {
+    resetInputsForm();
     advertFormElements.forEach(window.utils.setDisabled);
     advertForm.classList.add('ad-form--disabled');
   };

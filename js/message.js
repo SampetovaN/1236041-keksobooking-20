@@ -27,7 +27,8 @@
 
   var renderMessage = function (block) {
     main.append(block);
-    main.focus();
+    block.tabIndex = 1;
+    block.focus();
     var removeUploadMessage = function () {
       block.remove();
       document.removeEventListener('keydown', onEscDownUploadMessage);
