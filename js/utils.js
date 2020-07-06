@@ -7,10 +7,10 @@
     RADIUS: Math.round(65 / 2)
   };
   var MapRect = {
-    LEFT: 0,
+    LEFT: 160,
     RIGHT: 1200,
     TOP: 130,
-    BOTTOM: 630,
+    BOTTOM: 630
   };
   var StylePin = {
     PINS: '.map__pin:not(.map__pin--main)',
@@ -44,10 +44,15 @@
         action(evt);
       }
     },
-    isEscEvent: function (evt, action, element) {
+    isEscEvent: function (evt, action) {
       if (evt.key === ESCAPE_BUTTON) {
         evt.preventDefault();
-        action(evt, element);
+        action(evt);
+      }
+    },
+    isClickEvent: function (evt, action) {
+      if (evt.target.tagName !== 'P') {
+        action();
       }
     },
     isFunction: function (value) {
@@ -58,8 +63,6 @@
     },
     setUpRequest: function (url, xhr, onSuccess, onError) {
       xhr.responseType = 'json';
-
-      xhr.open('GET', url);
 
       xhr.addEventListener('load', function () {
         onSuccess(xhr.response);

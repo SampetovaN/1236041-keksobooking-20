@@ -12,7 +12,7 @@
   var advertPrice = advertForm.querySelector('#price');
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
-  advertTitle.value = 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
+  advertTitle.value = 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
   advertPrice.value = '2000';
   var guestToCapacity = {
     1: ['1'],
@@ -127,9 +127,9 @@
   var resetForm = function () {
     advertForm.reset();
     changeMinCost(typeToMinCost[advertType.value]);
+    formatMainPinAddress(false);
     advertFormElements.forEach(window.utils.setDisabled);
     advertForm.classList.add('ad-form--disabled');
-    formatMainPinAddress(false);
   };
 
   window.form = {

@@ -1,9 +1,10 @@
 'use strict';
 (function () {
   var MAX_ADVERTS = 5;
+  var ERROR_TIMEOUT_MS = 2000;
   var filterFormInputs = window.utils.map.querySelector('.map__filters').childNodes;
   var advertForm = document.querySelector('.ad-form');
-  var onMainPinFirstClick = function (evt) {
+  var onMainPinFirstMouseDown = function (evt) {
     window.utils.isLeftMouseButton(evt, turnOnPage);
   };
   var onMainPinEnterKeyDown = function (evt) {
@@ -11,6 +12,11 @@
   };
   var onMainPinMouseDown = function () {
     window.motion.moveMouse();
+  };
+  var onLoadError = function (errorMessage) {
+    var errorBlock = window.message.showLoadError(errorMessage);
+    window.utils.map.append(errorBlock);
+    setTimeout(window.utils.removeElement, ERROR_TIMEOUT_MS, errorBlock);
   };
   var onLoadSuccess = function (adverts) {
     adverts = adverts.filter(window.filter.checkAdvert);
@@ -31,31 +37,36 @@
       window.card.remove();
     });
   };
+
   var deactivatePage = function () {
     window.update.resetPage();
     window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
-    window.utils.mainPin.addEventListener('mousedown', onMainPinFirstClick);
+    window.utils.mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
     filterFormInputs.forEach(window.utils.setDisabled);
   };
   filterFormInputs.forEach(window.utils.setDisabled);
   window.utils.mainPin.addEventListener('mousedown', onMainPinMouseDown);
-  window.utils.mainPin.addEventListener('mousedown', onMainPinFirstClick);
+  window.utils.mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
   window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
 
   var turnOnPage = function () {
-    window.load(onLoadSuccess, window.error.onLoad);
+    window.load(onLoadSuccess, onLoadError);
     window.utils.map.classList.remove('map--faded');
     window.form.turnOn();
-    window.utils.mainPin.removeEventListener('mousedown', onMainPinFirstClick);
+    window.utils.mainPin.removeEventListener('mousedown', onMainPinFirstMouseDown);
     window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
   };
   var onUploadSuccess = function () {
-    window.result.onUploadSuccess();
+    window.message.showUploadSuccess();
     deactivatePage();
   };
 
+  var onUploadError = function () {
+    window.message.showUploadError();
+  };
+
   advertForm.addEventListener('submit', function (evt) {
-    window.upload(new FormData(advertForm), onUploadSuccess, window.result.onUploadError);
+    window.upload(new FormData(advertForm), onUploadSuccess, onUploadError);
     evt.preventDefault();
   });
 

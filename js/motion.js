@@ -1,24 +1,28 @@
 'use strict';
 (function () {
-  var minX = Math.round(window.utils.map.getBoundingClientRect().x) + window.utils.MainPinSize.RADIUS;
+  var minX = window.utils.MapRect.LEFT + window.utils.MainPinSize.RADIUS;
   var maxX = minX + window.utils.MapRect.RIGHT;
   var minY = window.utils.MapRect.TOP - window.utils.MainPinSize.HEIGHT;
   var maxY = window.utils.MapRect.BOTTOM - window.utils.MainPinSize.HEIGHT;
   var getXCoordinate = function (x) {
+    var resultX = x - minX;
     if (x < minX) {
-      return -window.utils.MainPinSize.RADIUS;
-    } else if (x > maxX) {
-      return window.utils.MapRect.RIGHT - window.utils.MainPinSize.RADIUS;
+      resultX = -window.utils.MainPinSize.RADIUS;
     }
-    return x - minX;
+    if (x > maxX) {
+      resultX = window.utils.MapRect.RIGHT - window.utils.MainPinSize.RADIUS;
+    }
+    return resultX;
   };
   var getYCoordinate = function (y) {
+    var resultY = y - window.utils.MainPinSize.RADIUS;
     if (y < minY) {
-      return minY;
-    } else if (y > maxY) {
-      return maxY;
+      resultY = minY;
     }
-    return y - window.utils.MainPinSize.RADIUS;
+    if (y > maxY) {
+      resultY = maxY;
+    }
+    return resultY;
   };
 
   var getPinCoordinates = function (x, y) {

@@ -4,6 +4,7 @@
     LEFT: 570,
     TOP: 375
   };
+
   var resetMainPin = function () {
     window.utils.mainPinStyle.left = CoordinatesMainPin.LEFT + 'px';
     window.utils.mainPinStyle.top = CoordinatesMainPin.TOP + 'px';
