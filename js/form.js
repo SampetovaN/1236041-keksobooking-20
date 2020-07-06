@@ -2,8 +2,13 @@
 (function () {
   var MIN_TITLE_LENGTH = 30;
   var MAX_TITLE_LENGTH = 100;
+  var TIME_TO_RESET = '12:00';
+  var TYPE_TO_RESET = 'flat';
+  var CAPACITY_TO_RESET = '3';
+  var ROOM_NUMBER_TO_RESET = '1';
   var advertForm = document.querySelector('.ad-form');
-  var advertFormBlocks = advertForm.childNodes;
+  var advertFormElements = advertForm.childNodes;
+  var advertAddress = advertForm.querySelector('#address');
   var capacity = advertForm.querySelector('#capacity');
   var roomNumber = advertForm.querySelector('#room_number');
   var advertTitle = advertForm.querySelector('#title');
@@ -11,17 +16,19 @@
   var advertPrice = advertForm.querySelector('#price');
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
+  var description = advertForm.querySelector('#description');
+  var advertFeatures = advertForm.querySelector('.features').childNodes;
   var guestToCapacity = {
     1: ['1'],
     2: ['1', '2'],
     3: ['1', '2', '3'],
-    100: ['0']
+    100: ['0'],
   };
   var guestToConstraint = {
     1: 'Для одной комнаты гостей не может быть больше одного',
     2: 'Для двух комнат гостей не может быть больше двух',
     3: 'Для трех комнат гостей не может быть больше трех',
-    100: 'Помещение сдается не для гостей'
+    100: 'Помещение сдается не для гостей',
   };
   var typeToMinCost = {
     flat: '1000',
@@ -68,7 +75,13 @@
     advertPrice.placeholder = minCost;
     advertPrice.min = minCost;
   };
-
+  var formatMainPinAddress = function (isTurnOn) {
+    var top = parseInt(window.utils.mainPin.style.top, 10);
+    var addressTop = top + (isTurnOn ? window.utils.MainPinSize.HEIGHT : window.utils.MainPinSize.RADIUS);
+    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
+    advertAddress.value = Math.round(addressLeft) + ', ' + Math.round(addressTop);
+  };
+  formatMainPinAddress(false);
   var checkAdvertPrice = function () {
     var isValid = !(advertPrice.validity.rangeUnderflow || advertPrice.validity.rangeOverflow);
     colorizeBorder(advertPrice, isValid);
@@ -79,12 +92,12 @@
   };
 
   var turnOnForm = function () {
-    advertFormBlocks.forEach(window.utils.unsetDisabled);
+    advertFormElements.forEach(window.utils.unsetDisabled);
     advertForm.classList.remove('ad-form--disabled');
     checkCapacity();
     checkAdvertPrice();
   };
-  advertFormBlocks.forEach(window.utils.setDisabled);
+  advertFormElements.forEach(window.utils.setDisabled);
 
   capacity.addEventListener('change', function () {
     checkCapacity();
@@ -114,9 +127,32 @@
   advertCheckOut.addEventListener('change', function () {
     sunchronizeTime(advertCheckOut, advertCheckIn);
   });
+  var unsetFeature = function (element) {
+    element.checked = false;
+  };
+  var resetInputsForm = function () {
+    advertCheckOut = TIME_TO_RESET;
+    advertCheckIn = TIME_TO_RESET;
+    advertType.value = TYPE_TO_RESET;
+    capacity.value = CAPACITY_TO_RESET;
+    advertTitle.value = '';
+    advertPrice.value = '';
+    description.value = '';
+    roomNumber.value = ROOM_NUMBER_TO_RESET;
+    advertFeatures.forEach(unsetFeature);
+    formatMainPinAddress(false);
+    changeMinCost(typeToMinCost[advertType.value]);
+  };
+  var resetForm = function () {
+    resetInputsForm();
+    advertFormElements.forEach(window.utils.setDisabled);
+    advertForm.classList.add('ad-form--disabled');
+  };
 
   window.form = {
-    turnOn: turnOnForm
+    turnOn: turnOnForm,
+    reset: resetForm,
+    formatMainPinAddress: formatMainPinAddress
   };
 })();
 
