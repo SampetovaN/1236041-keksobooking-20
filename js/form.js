@@ -12,8 +12,6 @@
   var advertPrice = advertForm.querySelector('#price');
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
-  advertTitle.value = 'dddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
-  advertPrice.value = '2000';
   var guestToCapacity = {
     1: ['1'],
     2: ['1', '2'],
