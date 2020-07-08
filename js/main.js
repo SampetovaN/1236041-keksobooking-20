@@ -20,12 +20,13 @@
   };
   var onLoadSuccess = function (adverts) {
     adverts = adverts.filter(window.filter.checkAdvert);
+
     window.map.addPins(adverts.slice(0, MAX_ADVERTS));
     filterFormInputs.forEach(window.utils.unsetDisabled);
-    window.filter.setOnChange(function (evt) {
+    window.filter.setOnChange(function () {
       var filteredAdverts = [];
       for (var i = 0; i < adverts.length; i++) {
-        if (window.filter.checkOption(evt, adverts[i])) {
+        if (window.filter.checkOption(adverts[i])) {
           filteredAdverts.push(adverts[i]);
           if (filteredAdverts.length === MAX_ADVERTS) {
             break;
