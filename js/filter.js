@@ -63,10 +63,10 @@
   };
 
   var checkRoomFeature = function (feature, featureToCompare) {
-    if (featureToCompare) {
-      return feature === featureToCompare;
+    if (!featureToCompare && featureToCompare !== 0) {
+      return true;
     }
-    return true;
+    return feature === featureToCompare;
   };
 
   var findAdvert = function (obj, item) {
