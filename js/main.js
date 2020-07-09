@@ -4,6 +4,9 @@
   var ERROR_TIMEOUT_MS = 2000;
   var filterFormInputs = window.utils.map.querySelector('.map__filters').childNodes;
   var advertForm = document.querySelector('.ad-form');
+  var filterValidAdvert = function (advert) {
+    return advert.offer && advert.location;
+  };
   var onMainPinFirstMouseDown = function (evt) {
     window.utils.isLeftMouseButton(evt, turnOnPage);
   };
@@ -19,23 +22,29 @@
     setTimeout(window.utils.removeElement, ERROR_TIMEOUT_MS, errorBlock);
   };
   var onLoadSuccess = function (adverts) {
-    adverts = adverts.filter(window.filter.checkAdvert);
-
-    window.map.addPins(adverts.slice(0, MAX_ADVERTS));
+    adverts = adverts.filter(filterValidAdvert);
+    var advertsMap = adverts.slice(0, MAX_ADVERTS);
+    window.map.addPins(advertsMap);
     filterFormInputs.forEach(window.utils.unsetDisabled);
     window.filter.setOnChange(function () {
+      window.pin.remove();
+      window.card.remove();
+      var values = window.filterValues.collect();
       var filteredAdverts = [];
-      for (var i = 0; i < adverts.length; i++) {
-        if (window.filter.checkOption(adverts[i])) {
-          filteredAdverts.push(adverts[i]);
-          if (filteredAdverts.length === MAX_ADVERTS) {
-            break;
+      if (values) {
+        for (var i = 0; i < adverts.length; i++) {
+          var advert = adverts[i];
+          if (window.filter.checkOption(values, advert)) {
+            filteredAdverts.push(advert);
+            if (filteredAdverts.length === MAX_ADVERTS) {
+              break;
+            }
           }
         }
+        window.map.addPins(filteredAdverts);
+      } else {
+        window.map.addPins(advertsMap);
       }
-      window.pin.remove();
-      window.map.addPins(filteredAdverts);
-      window.card.remove();
     });
   };
 

@@ -3,89 +3,67 @@
 (function () {
   var HIGH_PRICE = 50000;
   var LOW_PRICE = 10000;
+  var PriceValues = {
+    LOW: 'low',
+    MIDDLE: 'middle',
+    HIGH: 'high'
+  };
   var onFilterChange = null;
   var filterForm = window.utils.map.querySelector('.map__filters');
-  var filterInputs = Array.from(filterForm.children);
-  var options = filterInputs.slice(0, filterInputs.length - 1);
-  var features = Array.from(filterForm.querySelector('#housing-features').querySelectorAll('input'));
-  var filterValidAdvert = function (advert) {
-    return advert.offer && advert.location;
-  };
+
   var setOnFilterChange = function (onChange) {
     onFilterChange = onChange;
   };
-  var checkActiveOption = function (option) {
-    return option.value !== 'any';
-  };
-  var checkActiveFeature = function (feature) {
-    return feature.checked;
-  };
-  var getValueOptions = function (element) {
-    var elementFieldName = element.id.replace('housing-', '');
-    return [elementFieldName, element.value];
-  };
-  var getFeatureOptions = function (feature) {
-    return feature.value;
-  };
-  var setCurrentValues = function (activeOptions, activeFeatures) {
-    var values = {};
-    if (activeFeatures.length) {
-      values.features = activeFeatures;
-    }
-    activeOptions.forEach(function (item) {
-      values[item[0]] = item[1];
-    });
-    return values;
-  };
-  var checkFacilitiesEqual = function (facilities, facilitiesToCompare) {
-    if (facilitiesToCompare) {
-      return facilities.filter(function (array) {
-        return facilitiesToCompare.indexOf(array) > -1;
-      }).length === facilitiesToCompare.length;
 
-    }
-    return true;
+  var checkFacilitiesEqual = function (facilities, facilityValues) {
+    var isIncluded = function (element) {
+      return facilities.includes(element);
+    };
+    return facilityValues.every(isIncluded);
   };
 
   var checkPriceEqual = function (price, priceToCompare) {
-    if (priceToCompare) {
-      switch (priceToCompare) {
-        case 'middle':
-          return LOW_PRICE < price && price < HIGH_PRICE;
-        case 'low':
-          return LOW_PRICE > price;
-        case 'high':
-          return price > HIGH_PRICE;
-      }
-
+    var isPriceEqual;
+    switch (priceToCompare) {
+      case PriceValues.MIDDLE:
+        isPriceEqual = LOW_PRICE <= price && price <= HIGH_PRICE;
+        break;
+      case PriceValues.LOW:
+        isPriceEqual = LOW_PRICE >= price;
+        break;
+      case PriceValues.HIGH:
+        isPriceEqual = price >= HIGH_PRICE;
     }
-    return true;
+    return isPriceEqual;
   };
 
   var checkRoomFeature = function (feature, featureToCompare) {
-    if (!featureToCompare && featureToCompare !== 0) {
-      return true;
-    }
     return feature === featureToCompare;
   };
 
-  var findAdvert = function (obj, item) {
-    if (!obj) {
-      return true;
+  var checkOption = function (values, advert) {
+    var offer = advert.offer;
+    var isFacilitiesEqual = true;
+    var isPriceEqual = true;
+    var isTypeEqual = true;
+    var isCapacityEqual = true;
+    var isGuestsNumberEqual = true;
+    if (values.features) {
+      isFacilitiesEqual = checkFacilitiesEqual(offer.features, values.features);
     }
-    var offer = item.offer;
-    var isFacilitiesEqual = checkFacilitiesEqual(offer.features, obj.features);
-    var isPriceEqual = checkPriceEqual(offer.price, obj.price);
-    var isTypeEqual = checkRoomFeature(offer.type, obj.type);
-    var isCapacityEqual = checkRoomFeature(offer.rooms, Number(obj.rooms));
-    var isGuestsNumberEqual = checkRoomFeature(offer.guests, Number(obj.guests));
+    if (values.price) {
+      isPriceEqual = checkPriceEqual(offer.price, values.price);
+    }
+    if (values.type) {
+      isTypeEqual = checkRoomFeature(offer.type, values.type);
+    }
+    if (values.rooms) {
+      isCapacityEqual = checkRoomFeature(offer.rooms, Number(values.rooms));
+    }
+    if (values.guests) {
+      isGuestsNumberEqual = checkRoomFeature(offer.guests, Number(values.guests));
+    }
     return isFacilitiesEqual && isPriceEqual && isCapacityEqual && isGuestsNumberEqual && isTypeEqual;
-  };
-  var checkOption = function (advert) {
-    var currentFeatures = features.filter(checkActiveFeature).map(getFeatureOptions);
-    var currentValues = options.filter(checkActiveOption).map(getValueOptions);
-    var values = setCurrentValues(currentValues, currentFeatures);
-    return findAdvert(values, advert);
   };
   var onFilterFormChange = window.debounce(function (evt) {
     if (window.utils.isFunction(onFilterChange)) {
@@ -100,7 +78,6 @@
   window.filter = {
     checkOption: checkOption,
     setOnChange: setOnFilterChange,
-    checkAdvert: filterValidAdvert,
-    reset: resetFilter,
+    reset: resetFilter
   };
 })();
