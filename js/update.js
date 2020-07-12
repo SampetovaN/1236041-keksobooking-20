@@ -15,7 +15,7 @@
     window.form.reset();
     window.card.remove();
     window.pin.remove();
-    window.utils.map.classList.add('map--faded');
+    window.map.reset();
   };
   window.update = {
     resetPage: resetPage

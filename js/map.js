@@ -26,8 +26,12 @@
   var addPins = function (adverts) {
     window.utils.map.append.apply(window.utils.map, adverts.map(renderPin));
   };
+  var resetMap = function () {
+    window.utils.map.classList.add('map--faded');
+  };
 
   window.map = {
-    addPins: addPins
+    addPins: addPins,
+    reset: resetMap
   };
 })();

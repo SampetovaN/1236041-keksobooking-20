@@ -1,15 +1,15 @@
 'use strict';
 (function () {
-  var DEBOUNCE_INTERVAL = 300;
+  var DEBOUNCE_INTERVAL = 500;
 
   window.debounce = function (onTimeout) {
-    var lastTimeout = 0;
+    var lastTimeoutId = 0;
     return function () {
       var parameters = arguments;
-      if (lastTimeout) {
-        window.clearTimeout(lastTimeout);
+      if (lastTimeoutId > 0) {
+        window.clearTimeout(lastTimeoutId);
       }
-      lastTimeout = window.setTimeout(function () {
+      lastTimeoutId = window.setTimeout(function () {
         onTimeout.apply(null, parameters);
       }, DEBOUNCE_INTERVAL);
     };

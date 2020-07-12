@@ -23,8 +23,8 @@
   };
   var onLoadSuccess = function (adverts) {
     adverts = adverts.filter(filterValidAdvert);
-    var advertsMap = adverts.slice(0, MAX_ADVERTS);
-    window.map.addPins(advertsMap);
+    var permanentAdverts = adverts.slice(0, MAX_ADVERTS);
+    window.map.addPins(permanentAdverts);
     filterFormInputs.forEach(window.utils.unsetDisabled);
     window.filter.setOnChange(function () {
       window.pin.remove();
@@ -43,7 +43,7 @@
         }
         window.map.addPins(filteredAdverts);
       } else {
-        window.map.addPins(advertsMap);
+        window.map.addPins(permanentAdverts);
       }
     });
   };

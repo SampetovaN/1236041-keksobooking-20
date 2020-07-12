@@ -100,26 +100,26 @@
     removeCard();
   };
 
-  function setText(block, content) {
+  var setText = function (block, content) {
     block.textContent = content;
-  }
-  function setImage(block, image) {
+  };
+  var setImage = function (block, image) {
     block.src = image;
-  }
-  function setContent(block, content, setFunction) {
+  };
+  var setContent = function (block, content, setFunction) {
     if (content) {
       setFunction(block, content);
     } else {
       hideBlock(block);
     }
-  }
-  function setItems(generateFunction, block, items, item) {
+  };
+  var setItems = function setItems(generateFunction, block, items, item) {
     if (items.length > 0) {
       block.appendChild(generateFunction(items, item));
     } else {
       hideBlock(block);
     }
-  }
+  };
   var createCard = function (advert) {
     var card = cardTemplate.cloneNode(true);
     var offer = advert.offer;
