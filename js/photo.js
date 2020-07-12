@@ -7,13 +7,19 @@
   var previewAvatar = document.querySelector('.ad-form-header__preview img');
   var fileChooserPhoto = document.querySelector('.ad-form__upload input[type=file]');
   var previewContainer = document.querySelector('.ad-form__photo');
-  var setElementForUploadPhoto = function () {
-    var imageContainer = document.createElement('img');
-    imageContainer.alt = 'Фото жилья';
-    var imageStyle = imageContainer.style;
-    imageStyle.width = '100%';
-    imageStyle.height = '100%';
-    previewContainer.append(imageContainer);
+  var previewPhoto = null;
+  var setPreviewElement = function () {
+    previewPhoto = document.createElement('img');
+    previewPhoto.alt = 'Фото жилья';
+    var photoStyle = previewPhoto.style;
+    photoStyle.width = '100%';
+    photoStyle.height = '100%';
+    previewContainer.append(previewPhoto);
+  };
+  var onFirstChangeFileChooserPhoto = function () {
+    if (!previewPhoto) {
+      setPreviewElement();
+    }
   };
   var showUploadPhoto = function (fileChooser, preview) {
     var file = fileChooser.files[0];
@@ -34,6 +40,7 @@
   var resetPhotos = function () {
     previewAvatar.src = AVATAR_IMAGE;
     previewContainer.innerHTML = '';
+    previewPhoto = null;
   };
 
   fileChooserAvatar.addEventListener('change', function () {
@@ -41,10 +48,8 @@
   });
 
   fileChooserPhoto.addEventListener('change', function () {
-    if (!previewContainer.querySelector('img')) {
-      setElementForUploadPhoto();
-    }
-    showUploadPhoto(fileChooserPhoto, previewContainer.querySelector('img'));
+    onFirstChangeFileChooserPhoto();
+    showUploadPhoto(fileChooserPhoto, previewPhoto);
   });
 
   window.photo = {
