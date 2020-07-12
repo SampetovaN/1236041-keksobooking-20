@@ -145,6 +145,7 @@
   };
   var resetForm = function () {
     resetInputsForm();
+    window.photo.reset();
     advertFormElements.forEach(window.utils.setDisabled);
     advertForm.classList.add('ad-form--disabled');
   };

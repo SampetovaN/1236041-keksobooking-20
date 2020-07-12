@@ -60,6 +60,7 @@
     },
     removeElement: function (element) {
       element.remove();
+      element = null;
     },
     setUpRequest: function (url, xhr, onSuccess, onError) {
       xhr.responseType = 'json';

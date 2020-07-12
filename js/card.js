@@ -15,7 +15,7 @@
     if (currentCard === null) {
       return;
     }
-    window.utils.removeElement(currentCard);
+    currentCard.remove();
     currentCard = null;
     if (window.utils.isFunction(onCardRemove)) {
 

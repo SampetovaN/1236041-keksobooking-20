@@ -2,8 +2,8 @@
 
 (function () {
   var PriceValue = {
-    HIGH_PRICE: 50000,
-    LOW_PRICE: 10000,
+    HIGH: 50000,
+    LOW: 10000,
   };
   var PriceRange = {
     LOW: 'low',
@@ -18,20 +18,20 @@
   };
 
   var checkFacilitiesEqual = function (facilities, facilityValues) {
-    var isIncluded = function (element) {
+    var checkIncluded = function (element) {
       return facilities.includes(element);
     };
-    return facilityValues.every(isIncluded);
+    return facilityValues.every(checkIncluded);
   };
 
   var checkLowPrice = function (price) {
-    return PriceValue.LOW_PRICE >= price;
+    return PriceValue.LOW >= price;
   };
   var checkHighPrice = function (price) {
-    return price >= PriceValue.HIGH_PRICE;
+    return price >= PriceValue.HIGH;
   };
   var checkMiddlePrice = function (price) {
-    return PriceValue.LOW_PRICE <= price && price <= PriceValue.HIGH_PRICE;
+    return PriceValue.LOW <= price && price <= PriceValue.HIGH;
   };
   var checkPriceEqual = function (price, priceToCompare) {
     var isPriceEqual;
@@ -51,47 +51,17 @@
   var checkRoomFeature = function (feature, featureToCompare) {
     return feature === featureToCompare;
   };
-
+  var compareParameters = function (parameter, option, compareFunction) {
+    return (!option && option !== 0 || option.isNaN) ? true : compareFunction(parameter, option);
+  };
   var checkOption = function (values, advert) {
     var offer = advert.offer;
-    var isFacilitiesEqual = true;
-    var isPriceEqual = true;
-    var isTypeEqual = true;
-    var isCapacityEqual = true;
-    var isGuestsNumberEqual = true;
-    if (values.features) {
-      isFacilitiesEqual = checkFacilitiesEqual(offer.features, values.features);
-      if (!isFacilitiesEqual) {
-        return false;
-      }
-    }
-    if (values.price) {
-      isPriceEqual = checkPriceEqual(offer.price, values.price);
-      if (!isPriceEqual) {
-        return false;
-      }
-    }
-    if (values.type) {
-      isTypeEqual = checkRoomFeature(offer.type, values.type);
-
-      if (!isTypeEqual) {
-        return false;
-      }
-    }
-    if (values.rooms) {
-      isCapacityEqual = checkRoomFeature(offer.rooms, Number(values.rooms));
-
-      if (!isCapacityEqual) {
-        return false;
-      }
-    }
-    if (values.guests) {
-      isGuestsNumberEqual = checkRoomFeature(offer.guests, Number(values.guests));
-      if (!isGuestsNumberEqual) {
-        return false;
-      }
-    }
-    return isFacilitiesEqual && isPriceEqual && isCapacityEqual && isGuestsNumberEqual && isTypeEqual;
+    var parameters = [[offer.features, values.features, checkFacilitiesEqual], [offer.price, values.price, checkPriceEqual],
+      [offer.type, values.type, checkRoomFeature], [offer.rooms, Number(values.rooms), checkRoomFeature], [offer.guests, Number(values.guests), checkRoomFeature]];
+    var checkParameter = function (element) {
+      return compareParameters(element[0], element[1], element[2]);
+    };
+    return parameters.every(checkParameter);
   };
   var onFilterFormChange = window.debounce(function () {
     if (window.utils.isFunction(onFilterChange)) {
