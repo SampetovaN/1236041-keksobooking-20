@@ -17,6 +17,7 @@
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
   var description = advertForm.querySelector('#description');
+  var mainPin = document.querySelector('.map__pin--main');
   var advertFeatures = advertForm.querySelector('.features').childNodes;
   var guestToCapacity = {
     1: ['1'],
@@ -38,6 +39,9 @@
   };
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
+  };
+  var unColorizeBorder = function (element) {
+    element.style.borderColor = '';
   };
   var checkCapacity = function () {
     var isValid = guestToCapacity[roomNumber.value].indexOf(capacity.value) !== -1;
@@ -76,9 +80,9 @@
     advertPrice.min = minCost;
   };
   var formatMainPinAddress = function (isTurnOn) {
-    var top = parseInt(window.utils.mainPin.style.top, 10);
+    var top = parseInt(mainPin.style.top, 10);
     var addressTop = top + (isTurnOn ? window.utils.MainPinSize.HEIGHT : window.utils.MainPinSize.RADIUS);
-    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
+    var addressLeft = parseInt(mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
     advertAddress.value = Math.round(addressLeft) + ', ' + Math.round(addressTop);
   };
   formatMainPinAddress(false);
@@ -131,8 +135,8 @@
     element.checked = false;
   };
   var resetInputsForm = function () {
-    advertCheckOut = TIME_TO_RESET;
-    advertCheckIn = TIME_TO_RESET;
+    advertCheckOut.value = TIME_TO_RESET;
+    advertCheckIn.value = TIME_TO_RESET;
     advertType.value = TYPE_TO_RESET;
     capacity.value = CAPACITY_TO_RESET;
     advertTitle.value = '';
@@ -142,9 +146,11 @@
     advertFeatures.forEach(unsetFeature);
     formatMainPinAddress(false);
     changeMinCost(typeToMinCost[advertType.value]);
+    unColorizeBorder(capacity);
   };
   var resetForm = function () {
     resetInputsForm();
+    window.photo.reset();
     advertFormElements.forEach(window.utils.setDisabled);
     advertForm.classList.add('ad-form--disabled');
   };

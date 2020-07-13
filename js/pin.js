@@ -5,6 +5,7 @@
     HEIGHT: 70,
     RADIUS: 50 / 2
   };
+  var map = document.querySelector('.map');
   var pinTemplate = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
@@ -19,7 +20,7 @@
     return pin;
   };
   var removePins = function () {
-    window.utils.map.querySelectorAll(window.utils.StylePin.PINS).forEach(window.utils.removeElement);
+    map.querySelectorAll(window.utils.StylePin.PINS).forEach(window.utils.removeElement);
   };
   window.pin = {
     render: renderPin,

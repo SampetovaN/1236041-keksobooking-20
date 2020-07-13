@@ -1,30 +1,30 @@
 'use strict';
 
 (function () {
-  var options = Array.from(window.utils.map.querySelector('.map__filters').children);
-  var getValues = function () {
-    var values = {};
-    options.forEach(function (option) {
+  var options = Array.from(document.querySelector('.map__filters').children);
+  var findValues = function () {
+    var values = options.reduce(function (object, option) {
       if (option.id !== 'housing-features') {
         if (option.value !== 'any') {
-          values[option.id.replace('housing-', '')] = option.value;
+          object[option.id.replace('housing-', '')] = option.value;
         }
       } else {
         Array.from(option.querySelectorAll('input')).forEach(function (feature) {
           if (feature.checked) {
-            if (!values.features) {
-              values.features = [feature.value];
+            if (!object.features) {
+              object.features = [feature.value];
             } else {
-              values.features.push(feature.value);
+              object.features.push(feature.value);
             }
           }
         });
       }
-    });
+      return object;
+    }, {});
 
     return Object.keys(values).length > 0 ? values : null;
   };
   window.filterValues = {
-    collect: getValues
+    collect: findValues
   };
 })();

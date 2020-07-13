@@ -1,37 +1,37 @@
 'use strict';
 
 (function () {
-  var PriceValue = {
-    HIGH_PRICE: 50000,
-    LOW_PRICE: 10000,
-  };
   var PriceRange = {
     LOW: 'low',
     MIDDLE: 'middle',
     HIGH: 'high',
   };
+  var PriceRangeValue = {
+    HIGH: 50000,
+    LOW: 10000,
+  };
   var onFilterChange = null;
-  var filterForm = window.utils.map.querySelector('.map__filters');
+  var filterForm = document.querySelector('.map__filters');
 
   var setOnFilterChange = function (onChange) {
     onFilterChange = onChange;
   };
 
   var checkFacilitiesEqual = function (facilities, facilityValues) {
-    var isIncluded = function (element) {
+    var checkIncluded = function (element) {
       return facilities.includes(element);
     };
-    return facilityValues.every(isIncluded);
+    return facilityValues.every(checkIncluded);
   };
 
   var checkLowPrice = function (price) {
-    return PriceValue.LOW_PRICE >= price;
+    return PriceRangeValue.LOW >= price;
   };
   var checkHighPrice = function (price) {
-    return price >= PriceValue.HIGH_PRICE;
+    return price >= PriceRangeValue.HIGH;
   };
   var checkMiddlePrice = function (price) {
-    return PriceValue.LOW_PRICE <= price && price <= PriceValue.HIGH_PRICE;
+    return PriceRangeValue.LOW <= price && price <= PriceRangeValue.HIGH;
   };
   var checkPriceEqual = function (price, priceToCompare) {
     var isPriceEqual;

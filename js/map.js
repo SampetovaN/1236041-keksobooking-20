@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var map = document.querySelector('.map');
   var onEscKeyDown = function (evt) {
     window.utils.isEscEvent(evt, window.card.remove);
   };
@@ -11,7 +12,7 @@
         return;
       }
       window.card.remove();
-      window.card.render(window.utils.map, advert);
+      window.card.render(map, advert);
       pin.classList.add(window.utils.StylePin.PIN_ACTIVE);
       window.card.setOnRemove(function () {
         pin.classList.remove(window.utils.StylePin.PIN_ACTIVE);
@@ -24,10 +25,10 @@
   };
 
   var addPins = function (adverts) {
-    window.utils.map.append.apply(window.utils.map, adverts.map(renderPin));
+    map.append.apply(map, adverts.map(renderPin));
   };
   var resetMap = function () {
-    window.utils.map.classList.add('map--faded');
+    map.classList.add('map--faded');
   };
 
   window.map = {
