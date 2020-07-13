@@ -40,7 +40,7 @@
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
   };
-  var unColorizeBorder = function (element) {
+  var clearBorderColor = function (element) {
     element.style.borderColor = '';
   };
   var checkCapacity = function () {
@@ -146,7 +146,7 @@
     advertFeatures.forEach(unsetFeature);
     formatMainPinAddress(false);
     changeMinCost(typeToMinCost[advertType.value]);
-    unColorizeBorder(capacity);
+    clearBorderColor(capacity);
   };
   var resetForm = function () {
     resetInputsForm();
