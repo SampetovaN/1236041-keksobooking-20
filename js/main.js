@@ -2,7 +2,9 @@
 (function () {
   var MAX_ADVERTS = 5;
   var ERROR_TIMEOUT_MS = 2000;
-  var filterFormInputs = window.utils.map.querySelector('.map__filters').childNodes;
+  var map = document.querySelector('.map');
+  var mainPin = map.querySelector('.map__pin--main');
+  var filterFormInputs = map.querySelector('.map__filters').childNodes;
   var advertForm = document.querySelector('.ad-form');
   var filterValidAdvert = function (advert) {
     return advert.offer && advert.location;
@@ -13,12 +15,12 @@
   var onMainPinEnterKeyDown = function (evt) {
     window.utils.isEnterEvent(evt, turnOnPage);
   };
-  var onMainPinMouseDown = function () {
-    window.motion.moveMouse();
+  var onMainPinMouseDown = function (evt) {
+    window.motion.moveMouse(evt);
   };
   var onLoadError = function (errorMessage) {
     var errorBlock = window.message.showLoadError(errorMessage);
-    window.utils.map.append(errorBlock);
+    map.append(errorBlock);
     setTimeout(window.utils.removeElement, ERROR_TIMEOUT_MS, errorBlock);
   };
   var onLoadSuccess = function (adverts) {
@@ -50,21 +52,21 @@
 
   var deactivatePage = function () {
     window.update.resetPage();
-    window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
-    window.utils.mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
+    mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
+    mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
     filterFormInputs.forEach(window.utils.setDisabled);
   };
   filterFormInputs.forEach(window.utils.setDisabled);
-  window.utils.mainPin.addEventListener('mousedown', onMainPinMouseDown);
-  window.utils.mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
-  window.utils.mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
+  mainPin.addEventListener('mousedown', onMainPinMouseDown);
+  mainPin.addEventListener('mousedown', onMainPinFirstMouseDown);
+  mainPin.addEventListener('keydown', onMainPinEnterKeyDown);
 
   var turnOnPage = function () {
     window.load(onLoadSuccess, onLoadError);
-    window.utils.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     window.form.turnOn();
-    window.utils.mainPin.removeEventListener('mousedown', onMainPinFirstMouseDown);
-    window.utils.mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
+    mainPin.removeEventListener('mousedown', onMainPinFirstMouseDown);
+    mainPin.removeEventListener('keydown', onMainPinEnterKeyDown);
   };
   var onUploadSuccess = function () {
     window.message.showUploadSuccess();

@@ -17,6 +17,7 @@
   var advertCheckIn = advertForm.querySelector('#timein');
   var advertCheckOut = advertForm.querySelector('#timeout');
   var description = advertForm.querySelector('#description');
+  var mainPin = document.querySelector('.map__pin--main');
   var advertFeatures = advertForm.querySelector('.features').childNodes;
   var guestToCapacity = {
     1: ['1'],
@@ -76,9 +77,9 @@
     advertPrice.min = minCost;
   };
   var formatMainPinAddress = function (isTurnOn) {
-    var top = parseInt(window.utils.mainPin.style.top, 10);
+    var top = parseInt(mainPin.style.top, 10);
     var addressTop = top + (isTurnOn ? window.utils.MainPinSize.HEIGHT : window.utils.MainPinSize.RADIUS);
-    var addressLeft = parseInt(window.utils.mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
+    var addressLeft = parseInt(mainPin.style.left, 10) + window.utils.MainPinSize.RADIUS;
     advertAddress.value = Math.round(addressLeft) + ', ' + Math.round(addressTop);
   };
   formatMainPinAddress(false);

@@ -9,15 +9,16 @@
   var previewContainer = document.querySelector('.ad-form__photo');
   var previewPhoto = null;
   var setPreviewElement = function () {
-    previewPhoto = document.createElement('img');
-    previewPhoto.alt = 'Фото жилья';
-    var photoStyle = previewPhoto.style;
+    var photoContainer = document.createElement('img');
+    photoContainer.alt = 'Фото жилья';
+    var photoStyle = photoContainer.style;
     photoStyle.width = '100%';
     photoStyle.height = '100%';
+    previewPhoto = photoContainer;
     previewContainer.append(previewPhoto);
   };
-  var onFirstChangeFileChooserPhoto = function () {
-    if (!previewPhoto) {
+  var сheckPreviewContainer = function () {
+    if (previewPhoto === null) {
       setPreviewElement();
     }
   };
@@ -29,11 +30,11 @@
     });
 
     if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        preview.src = reader.result;
+      var objectURL = window.URL.createObjectURL(file);
+      preview.src = objectURL;
+      preview.addEventListener('load', function () {
+        URL.revokeObjectURL(objectURL);
       });
-      reader.readAsDataURL(file);
     }
   };
 
@@ -48,11 +49,11 @@
   });
 
   fileChooserPhoto.addEventListener('change', function () {
-    onFirstChangeFileChooserPhoto();
+    сheckPreviewContainer();
     showUploadPhoto(fileChooserPhoto, previewPhoto);
   });
 
   window.photo = {
-    reset: resetPhotos
+    reset: resetPhotos,
   };
 })();

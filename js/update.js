@@ -1,13 +1,14 @@
 'use strict';
 (function () {
+  var mainPinStyle = document.querySelector('.map__pin--main').style;
   var CoordinatesMainPin = {
     LEFT: 570,
     TOP: 375
   };
 
   var resetMainPin = function () {
-    window.utils.mainPinStyle.left = CoordinatesMainPin.LEFT + 'px';
-    window.utils.mainPinStyle.top = CoordinatesMainPin.TOP + 'px';
+    mainPinStyle.left = CoordinatesMainPin.LEFT + 'px';
+    mainPinStyle.top = CoordinatesMainPin.TOP + 'px';
   };
   var resetPage = function () {
     resetMainPin();

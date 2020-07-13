@@ -19,15 +19,10 @@
   var LEFT_MOUSE_BUTTON = 0;
   var ENTER_BUTTON = 'Enter';
   var ESCAPE_BUTTON = 'Escape';
-  var map = document.querySelector('.map');
-  var mainPin = map.querySelector('.map__pin--main');
   window.utils = {
     MainPinSize: MainPinSize,
     MapRect: MapRect,
-    map: map,
     StylePin: StylePin,
-    mainPin: mainPin,
-    mainPinStyle: mainPin.style,
     setDisabled: function (element) {
       element.disabled = true;
     },
@@ -60,7 +55,6 @@
     },
     removeElement: function (element) {
       element.remove();
-      element = null;
     },
     setUpRequest: function (url, xhr, onSuccess, onError) {
       xhr.responseType = 'json';

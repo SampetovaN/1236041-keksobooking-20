@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var options = Array.from(window.utils.map.querySelector('.map__filters').children);
+  var options = Array.from(document.querySelector('.map__filters').children);
   var getValues = function () {
     var values = {};
     options.forEach(function (option) {

@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var mainPinStyle = document.querySelector('.map__pin--main').style;
   var minX = window.utils.MapRect.LEFT + window.utils.MainPinSize.RADIUS;
   var maxX = minX + window.utils.MapRect.RIGHT;
   var minY = window.utils.MapRect.TOP - window.utils.MainPinSize.HEIGHT;
@@ -28,12 +29,13 @@
   var getPinCoordinates = function (x, y) {
     return {x: getXCoordinate(x), y: getYCoordinate(y)};
   };
-  var moveMouse = function () {
-
-    var onMouseMove = function (evt) {
-      var coordinates = getPinCoordinates(evt.pageX, evt.pageY);
-      window.utils.mainPinStyle.top = coordinates.y + 'px';
-      window.utils.mainPinStyle.left = coordinates.x + 'px';
+  var moveMouse = function (evt) {
+    evt.preventDefault();
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+      var coordinates = getPinCoordinates(moveEvt.pageX, moveEvt.pageY);
+      mainPinStyle.top = coordinates.y + 'px';
+      mainPinStyle.left = coordinates.x + 'px';
       window.form.formatMainPinAddress(true);
     };
 
@@ -41,11 +43,10 @@
       upEvt.preventDefault();
       window.form.formatMainPinAddress(true);
       document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
     };
 
     document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('mouseup', onMouseUp, {once: true});
   };
   window.motion = {
     moveMouse: moveMouse
