@@ -31,10 +31,12 @@
 
     if (matches) {
       var objectURL = window.URL.createObjectURL(file);
-      preview.src = objectURL;
-      preview.addEventListener('load', function () {
+      var onPreviewLoad = function () {
         URL.revokeObjectURL(objectURL);
-      });
+        preview.removeEventListener('load', onPreviewLoad);
+      };
+      preview.src = objectURL;
+      preview.addEventListener('load', onPreviewLoad);
     }
   };
 
