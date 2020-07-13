@@ -33,10 +33,9 @@
       var objectURL = window.URL.createObjectURL(file);
       var onPreviewLoad = function () {
         URL.revokeObjectURL(objectURL);
-        preview.removeEventListener('load', onPreviewLoad);
       };
       preview.src = objectURL;
-      preview.addEventListener('load', onPreviewLoad);
+      preview.addEventListener('load', onPreviewLoad, {once: true});
     }
   };
 

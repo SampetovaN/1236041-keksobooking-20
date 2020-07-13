@@ -40,6 +40,9 @@
   var colorizeBorder = function (element, isValid) {
     element.style.borderColor = isValid ? '' : 'red';
   };
+  var unColorizeBorder = function (element) {
+    element.style.borderColor = '';
+  };
   var checkCapacity = function () {
     var isValid = guestToCapacity[roomNumber.value].indexOf(capacity.value) !== -1;
 
@@ -132,8 +135,8 @@
     element.checked = false;
   };
   var resetInputsForm = function () {
-    advertCheckOut = TIME_TO_RESET;
-    advertCheckIn = TIME_TO_RESET;
+    advertCheckOut.value = TIME_TO_RESET;
+    advertCheckIn.value = TIME_TO_RESET;
     advertType.value = TYPE_TO_RESET;
     capacity.value = CAPACITY_TO_RESET;
     advertTitle.value = '';
@@ -143,6 +146,7 @@
     advertFeatures.forEach(unsetFeature);
     formatMainPinAddress(false);
     changeMinCost(typeToMinCost[advertType.value]);
+    unColorizeBorder(capacity);
   };
   var resetForm = function () {
     resetInputsForm();

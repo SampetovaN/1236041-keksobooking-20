@@ -6,6 +6,7 @@
   var mainPin = map.querySelector('.map__pin--main');
   var filterFormInputs = map.querySelector('.map__filters').childNodes;
   var advertForm = document.querySelector('.ad-form');
+  var resetFormButton = advertForm.querySelector('.ad-form__reset');
   var filterValidAdvert = function (advert) {
     return advert.offer && advert.location;
   };
@@ -82,7 +83,7 @@
     evt.preventDefault();
   });
 
-  advertForm.addEventListener('reset', function () {
+  resetFormButton.addEventListener('click', function () {
     deactivatePage();
   });
 
