@@ -2,6 +2,7 @@
 
 (function () {
   var map = document.querySelector('.map');
+  var pinContainer = map.querySelector('.map__pins');
   var onEscKeyDown = function (evt) {
     window.utils.isEscEvent(evt, window.card.remove);
   };
@@ -25,7 +26,7 @@
   };
 
   var addPins = function (adverts) {
-    map.append.apply(map, adverts.map(renderPin));
+    pinContainer.append.apply(pinContainer, adverts.map(renderPin));
   };
   var resetMap = function () {
     map.classList.add('map--faded');

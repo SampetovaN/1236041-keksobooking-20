@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ROOM_ENDINGS = ['комната', 'комнаты', 'комнат'];
-  var GUEST_ENDINGS = ['гостя', 'гостей'];
   var typeToHouseName = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
@@ -28,30 +26,6 @@
     onCardRemove = onRemove;
   };
 
-  var getWordEnding = function (number, forms) {
-    var ending = '';
-    var numberCheck = number % 100;
-    var startTeen = 11;
-    var endTeen = 19;
-    if (numberCheck >= startTeen && numberCheck <= endTeen) {
-      ending = forms[2];
-    } else {
-      var result = numberCheck % 10;
-      switch (result) {
-        case (1):
-          ending = forms[0];
-          break;
-        case (2):
-        case (3):
-        case (4):
-          ending = forms[1];
-          break;
-        default:
-          ending = forms[2] || forms[1];
-      }
-    }
-    return number + ' ' + ending;
-  };
   var cardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
@@ -91,14 +65,12 @@
 
   var fillInCapacity = function (capacity, rooms, guests) {
     if (rooms && guests) {
-      capacity.textContent = getWordEnding(rooms, ROOM_ENDINGS) + ' для ' + getWordEnding(guests, GUEST_ENDINGS);
+      capacity.textContent = rooms + ' комнат(ы/а) для ' + guests + ' гостя/ей';
     } else {
       hideBlock(capacity);
     }
   };
-  var onCardClick = function () {
-    removeCard();
-  };
+
 
   var setText = function (block, content) {
     block.textContent = content;
@@ -139,7 +111,9 @@
     setContent(card.querySelector('.popup__text--time'), 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout, setText);
     setContent(card.querySelector('.popup__description'), offer.description, setText);
     setContent(card.querySelector('.popup__avatar'), advert.author.avatar, setImage);
-    card.querySelector('.popup__close').addEventListener('click', onCardClick);
+    card.querySelector('.popup__close').addEventListener('click', function () {
+      removeCard();
+    });
     return card;
   };
 

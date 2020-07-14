@@ -29,18 +29,18 @@
     main.append(block);
     block.tabIndex = 1;
     block.focus();
-    var removeUploadMessage = function () {
+    var removeBlock = function () {
       block.remove();
-      document.removeEventListener('keydown', onEscDownUploadMessage);
+      document.removeEventListener('keydown', onEscKeyDown);
     };
-    var onClickUploadMessage = function (evt) {
-      window.utils.isClickEvent(evt, removeUploadMessage);
+    var onClickBlock = function (evt) {
+      window.utils.isClickEvent(evt, removeBlock);
     };
-    var onEscDownUploadMessage = function (evt) {
-      window.utils.isEscEvent(evt, removeUploadMessage);
+    var onEscKeyDown = function (evt) {
+      window.utils.isEscEvent(evt, removeBlock);
     };
-    document.addEventListener('keydown', onEscDownUploadMessage);
-    block.addEventListener('click', onClickUploadMessage);
+    document.addEventListener('keydown', onEscKeyDown);
+    block.addEventListener('click', onClickBlock);
   };
 
   var showUploadSuccess = function () {

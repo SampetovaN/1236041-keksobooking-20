@@ -25,10 +25,10 @@
   };
 
   var checkLowPrice = function (price) {
-    return PriceRangeValue.LOW >= price;
+    return PriceRangeValue.LOW > price;
   };
   var checkHighPrice = function (price) {
-    return price >= PriceRangeValue.HIGH;
+    return price > PriceRangeValue.HIGH;
   };
   var checkMiddlePrice = function (price) {
     return PriceRangeValue.LOW <= price && price <= PriceRangeValue.HIGH;

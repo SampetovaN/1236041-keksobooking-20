@@ -17,6 +17,7 @@
     image.alt = advert.offer.title;
     pin.style.left = (advert.location.x - PinSize.RADIUS) + 'px';
     pin.style.top = (advert.location.y - PinSize.HEIGHT) + 'px';
+    pin.tabIndex = 0;
     return pin;
   };
   var removePins = function () {
